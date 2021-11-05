@@ -4,8 +4,9 @@ import "dotenv/config"
 import { v4 as uuidv4 } from "uuid"
 import DB from "@databases"
 import WebSocket, { EventEmitter } from "ws"
+import { Processor } from "./match/Processor"
 
-interface CustomSocket extends WebSocket {
+export interface CustomSocket extends WebSocket {
   isAlive: boolean
   id: string
 }
@@ -19,6 +20,7 @@ class Game {
     this.startServer()
     this.connectToDatabase()
     this.bindEvents()
+    this.matchStart()
   }
 
   private connectToDatabase() {
@@ -35,12 +37,17 @@ class Game {
   private bindEvents() {
     this.wss.on("connection", this.handleConnection)
 
-    setInterval(() => {
-      // @ts-ignore
-      this.wss.clients.forEach(client => {
-        console.log("Client.ID: " + client.id)
-      })
-    }, 2000)
+    // setInterval(() => {
+    //   // @ts-ignore
+    //   this.wss.clients.forEach(client => {
+    //     console.log("Client.ID: " + client.id)
+    //   })
+    // }, 2000)
+  }
+
+  private matchStart() {
+    // COOP
+    
   }
 
   private handleConnection(socket: CustomSocket) {
@@ -52,7 +59,7 @@ class Game {
     socket.on("message", data => {
       try {
         const payload = JSON.parse(data.toString())
-        console.log("payload", payload)
+        new Processor(socket).process(payload)
       } catch {}
     })
   }

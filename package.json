@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
-    "game": "ts-node -r tsconfig-paths/register --files src/game.ts",
+    "match": "ts-node -r tsconfig-paths/register --files src/match.ts",
     "dev": "cross-env NODE_ENV=development nodemon",
     "build": "tsc && npx tsc-alias",
     "test": "jest --forceExit --detectOpenHandles",
