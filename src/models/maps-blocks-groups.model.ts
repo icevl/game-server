@@ -15,6 +15,7 @@ export class MapsBlocksGroupsModel extends Model<IMapBlockGroup, MapCreationAttr
   public readonly updatedAt!: Date
 
   static associate(models) {
+    this.belongsTo(models.Maps, { foreignKey: "map_id", as: "map" })
     this.hasMany(models.MapsBlocks, { as: "blocks", foreignKey: "group_id" })
   }
 }

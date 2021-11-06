@@ -15,10 +15,12 @@ export interface IPlayer {
   character: ICharacter
   user: IUser
   name: string
+  sessionId: string
 }
 
 export enum EventType {
   Connect = "connect",
   SpawnBlocks = "spawn_blocks",
-  SpawnBlocksComplete = "spawn_blocks_complete"
+  SpawnBlocksComplete = "spawn_blocks_complete",
+  SpawnPlayer = "spawn_player"
 }

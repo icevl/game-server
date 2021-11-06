@@ -29,9 +29,9 @@ class Match {
   }
 
   private async init() {
-    await DB.sequelize.sync({ force: false /* alter: true */ })
+    await DB.sequelize.sync({ force: false, alter: true })
     const match = await this.matchesService.findMatch(this.uuid)
-    if (match.id) {
+    if (match && match.id) {
       const blocks = await this.map.getSpawnBlocks(match.map_id)
 
       this.session.setBlocks(blocks)
@@ -54,10 +54,6 @@ class Match {
     //     console.log("Client.ID: " + client.id)
     //   })
     // }, 2000)
-  }
-
-  private socketSend(socket: any, payload: string) {
-    socket.send(JSON.stringify(payload))
   }
 
   private handleConnection(socket: ICustomSocket) {

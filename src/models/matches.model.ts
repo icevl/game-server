@@ -14,7 +14,9 @@ export class MatchesModel extends Model<IMatch, MatchCreationAttributes> impleme
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
 
-  static associate() {}
+  static associate(models) {
+    this.hasMany(models.MatchesSessions, { as: "sessions", foreignKey: "match_id" })
+  }
 }
 
 export default function (sequelize: Sequelize): typeof MatchesModel {
@@ -54,7 +56,13 @@ export default function (sequelize: Sequelize): typeof MatchesModel {
       tableName: "matches",
       indexes: [
         {
-          fields: ["map_id", "uuid"],
+          unique: false,
+          fields: ["map_id"],
+          using: "BTREE"
+        },
+        {
+          unique: true,
+          fields: ["uuid"],
           using: "BTREE"
         }
       ],

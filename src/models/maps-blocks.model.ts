@@ -43,6 +43,7 @@ export default function (sequelize: Sequelize): typeof MapsBlocksModel {
       tableName: "maps_blocks",
       indexes: [
         {
+          unique: false,
           fields: ["group_id", "name"],
           using: "BTREE"
         }

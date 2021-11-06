@@ -12,7 +12,9 @@ export class CharacterModel extends Model<ICharacter, MatchCreationAttributes> i
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
 
-  static associate() {}
+  static associate(models) {
+    this.hasMany(models.MatchesSessions, { as: "sessions", foreignKey: "character_id" })
+  }
 }
 
 export default function (sequelize: Sequelize): typeof CharacterModel {
@@ -37,11 +39,6 @@ export default function (sequelize: Sequelize): typeof CharacterModel {
       sequelize
     }
   )
-
-  CharacterModel.belongsTo(UserModel, {
-    foreignKey: "user_id",
-    as: "user"
-  })
 
   return CharacterModel
 }

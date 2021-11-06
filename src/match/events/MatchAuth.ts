@@ -16,7 +16,8 @@ export class MatchAuth extends MatchEventBase {
       const player: IPlayer = {
         user,
         character,
-        name: `player_${user.id}`
+        name: `character_${character.id}`,
+        sessionId: this.socket.id
       }
 
       this.session.addPlayer(player)

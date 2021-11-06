@@ -4,6 +4,7 @@ import { dbConfig } from "@interfaces/db.interface"
 import UserModel from "@models/users.model"
 import CharacterModel from "@models/characters.model"
 import MatchModel from "@models/matches.model"
+import MatchesSessionsModel from "@models/matches-sessions.model"
 import MapModel from "@models/maps.model"
 import MapsBlocksGroupsModel from "@models/maps-blocks-groups.model"
 import MapsBlocksModel from "@models/maps-blocks.model"
@@ -40,7 +41,8 @@ const models = {
   Matches: MatchModel(sequelize),
   Maps: MapModel(sequelize),
   MapsBlocksGroups: MapsBlocksGroupsModel(sequelize),
-  MapsBlocks: MapsBlocksModel(sequelize)
+  MapsBlocks: MapsBlocksModel(sequelize),
+  MatchesSessions: MatchesSessionsModel(sequelize)
 }
 
 Object.values(models)

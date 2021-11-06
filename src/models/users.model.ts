@@ -11,7 +11,9 @@ export class UserModel extends Model<IUser, UserCreationAttributes> implements I
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
 
-  static associate() {}
+  static associate(models) {
+    this.hasOne(models.Characters, { foreignKey: "user_id", as: "character" })
+  }
 }
 
 export default function (sequelize: Sequelize): typeof UserModel {
@@ -36,7 +38,7 @@ export default function (sequelize: Sequelize): typeof UserModel {
       indexes: [
         {
           unique: true,
-          fields: ["email"]
+          fields: ["id", "email"]
         }
       ],
       sequelize
