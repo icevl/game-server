@@ -4,6 +4,8 @@ import "dotenv/config"
 import { v4 as uuidv4 } from "uuid"
 import DB from "@databases"
 import WebSocket, { EventEmitter } from "ws"
+import MatchesService from "./services/matches.service"
+import { IMatch } from "./interfaces/matches.interface"
 import { Processor } from "./match/Processor"
 
 export interface CustomSocket extends WebSocket {
@@ -11,31 +13,32 @@ export interface CustomSocket extends WebSocket {
   id: string
 }
 
-class Game {
+class Match {
   private wss: EventEmitter
-  private port: number
+  private uuid: string
+  private match: IMatch
+  private matchesService = new MatchesService()
 
-  constructor(port: number) {
-    this.port = port
-    this.startServer()
-    this.connectToDatabase()
-    this.bindEvents()
-    this.matchStart()
+  constructor(uuid: string) {
+    this.uuid = uuid
+    this.init()
   }
 
-  private connectToDatabase() {
-    DB.sequelize.sync({ force: false })
+  private async init() {
+    await DB.sequelize.sync({ force: false, alter: true })
+    const match = await this.matchesService.findMatch(this.uuid)
+    if (match.id) {
+      this.match = match
+      this.startServer()
+    }
   }
 
   private startServer() {
-    this.wss = new WebSocket.Server({ port: this.port })
+    this.wss = new WebSocket.Server({ port: this.match.port })
     this.wss.on("listening", () => {
-      console.log("Server started at port", this.port)
+      console.log("Server started at port", this.match.port)
     })
-  }
-
-  private bindEvents() {
-    this.wss.on("connection", this.handleConnection)
+    this.wss.on("connection", (socket: CustomSocket) => this.handleConnection(socket))
 
     // setInterval(() => {
     //   // @ts-ignore
@@ -45,11 +48,6 @@ class Game {
     // }, 2000)
   }
 
-  private matchStart() {
-    // COOP
-    
-  }
-
   private handleConnection(socket: CustomSocket) {
     socket.id = uuidv4()
 
@@ -57,12 +55,10 @@ class Game {
 
     socket.on("pong", () => (socket.isAlive = true))
     socket.on("message", data => {
-      try {
-        const payload = JSON.parse(data.toString())
-        new Processor(socket).process(payload)
-      } catch {}
+      const payload = JSON.parse(data.toString())
+      new Processor(socket, this.match).process(payload)
     })
   }
 }
 
-new Game(9090)
+new Match("9b8203e4-3cf4-423e-bae5-2cc7316134b7")

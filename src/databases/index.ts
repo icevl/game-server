@@ -3,6 +3,7 @@ import Sequelize from "sequelize"
 import { dbConfig } from "@interfaces/db.interface"
 import UserModel from "@models/users.model"
 import CharacterModel from "@models/characters.model"
+import MatchModel from "@models/matches.model"
 
 import { logger } from "@utils/logger"
 
@@ -32,7 +33,8 @@ sequelize.authenticate()
 
 const DB = {
   Users: UserModel(sequelize),
-  Character: CharacterModel(sequelize),
+  Characters: CharacterModel(sequelize),
+  Matches: MatchModel(sequelize),
   sequelize, // connection instance (RAW queries)
   Sequelize // library
 }

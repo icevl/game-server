@@ -2,9 +2,9 @@ import { Sequelize, DataTypes, Model, Optional } from "sequelize"
 import { Character } from "@interfaces/characters.interface"
 import { UserModel } from "./users.model"
 
-export type UserCreationAttributes = Optional<Character, "id" | "user_id" | "model">
+export type MatchCreationAttributes = Optional<Character, "id" | "user_id" | "model">
 
-export class CharacterModel extends Model<Character, UserCreationAttributes> implements Character {
+export class CharacterModel extends Model<Character, MatchCreationAttributes> implements Character {
   public id: number
   public user_id: number
   public model: string
