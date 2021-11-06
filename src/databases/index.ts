@@ -4,6 +4,9 @@ import { dbConfig } from "@interfaces/db.interface"
 import UserModel from "@models/users.model"
 import CharacterModel from "@models/characters.model"
 import MatchModel from "@models/matches.model"
+import MapModel from "@models/maps.model"
+import MapsBlocksGroupsModel from "@models/maps-blocks-groups.model"
+import MapsBlocksModel from "@models/maps-blocks.model"
 
 import { logger } from "@utils/logger"
 
@@ -31,10 +34,21 @@ const sequelize = new Sequelize.Sequelize(database, user, password, {
 
 sequelize.authenticate()
 
-const DB = {
+const models = {
   Users: UserModel(sequelize),
   Characters: CharacterModel(sequelize),
   Matches: MatchModel(sequelize),
+  Maps: MapModel(sequelize),
+  MapsBlocksGroups: MapsBlocksGroupsModel(sequelize),
+  MapsBlocks: MapsBlocksModel(sequelize)
+}
+
+Object.values(models)
+  .filter(model => typeof model.associate === "function")
+  .forEach(model => model.associate(models))
+
+const DB = {
+  ...models,
   sequelize, // connection instance (RAW queries)
   Sequelize // library
 }

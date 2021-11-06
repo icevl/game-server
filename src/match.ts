@@ -4,19 +4,23 @@ import "dotenv/config"
 import { v4 as uuidv4 } from "uuid"
 import DB from "@databases"
 import WebSocket, { EventEmitter } from "ws"
+import { Map } from "./match/Map"
 import MatchesService from "./services/matches.service"
-import { IMatch } from "./interfaces/matches.interface"
 import { Processor } from "./match/Processor"
+import { Session } from "./match/Session"
 
-export interface CustomSocket extends WebSocket {
+export interface ICustomSocket extends WebSocket {
   isAlive: boolean
   id: string
+  sendEvent: (payload: any) => void
 }
 
 class Match {
   private wss: EventEmitter
   private uuid: string
-  private match: IMatch
+
+  private session: Session = new Session()
+  private map: Map = new Map()
   private matchesService = new MatchesService()
 
   constructor(uuid: string) {
@@ -25,20 +29,24 @@ class Match {
   }
 
   private async init() {
-    await DB.sequelize.sync({ force: false, alter: true })
+    await DB.sequelize.sync({ force: false /* alter: true */ })
     const match = await this.matchesService.findMatch(this.uuid)
     if (match.id) {
-      this.match = match
+      const blocks = await this.map.getSpawnBlocks(match.map_id)
+
+      this.session.setBlocks(blocks)
+      this.session.setMatch(match)
+
       this.startServer()
     }
   }
 
   private startServer() {
-    this.wss = new WebSocket.Server({ port: this.match.port })
+    this.wss = new WebSocket.Server({ port: this.session.match.port })
     this.wss.on("listening", () => {
-      console.log("Server started at port", this.match.port)
+      console.log("Server started at port", this.session.match.port)
     })
-    this.wss.on("connection", (socket: CustomSocket) => this.handleConnection(socket))
+    this.wss.on("connection", (socket: ICustomSocket) => this.handleConnection(socket))
 
     // setInterval(() => {
     //   // @ts-ignore
@@ -48,15 +56,21 @@ class Match {
     // }, 2000)
   }
 
-  private handleConnection(socket: CustomSocket) {
+  private socketSend(socket: any, payload: string) {
+    socket.send(JSON.stringify(payload))
+  }
+
+  private handleConnection(socket: ICustomSocket) {
     socket.id = uuidv4()
 
-    console.log("Client connected: ", socket.id)
+    socket.sendEvent = (payload: any) => {
+      socket.send(JSON.stringify(payload))
+    }
 
     socket.on("pong", () => (socket.isAlive = true))
     socket.on("message", data => {
       const payload = JSON.parse(data.toString())
-      new Processor(socket, this.match).process(payload)
+      new Processor(socket, this.session).process(payload)
     })
   }
 }

@@ -1,18 +1,17 @@
-import { CustomSocket } from "../match"
-import { IMatch } from "@interfaces/matches.interface"
+import { IEvent, EventType } from "@interfaces/match/match.interface"
+import { MatchAuth } from "./events/MatchAuth"
+import { MatchMap } from "./events/MatchMap"
+import { MatchEventBase } from "./events/MatchEventBase"
 
-export class Processor {
-  private socket: CustomSocket
-  private match: IMatch
+const EVENT_MAPING = {
+  [EventType.Connect]: MatchAuth,
+  [EventType.SpawnBlocksComplete]: MatchMap
+}
 
-  constructor(socket: CustomSocket, match: IMatch) {
-    this.socket = socket
-    this.match = match
-  }
-
-  public process(data: any) {
-    console.log("ID", this.socket.id)
-    console.log("Match ID", this.match.id)
-    console.log("PROCESS", data)
+export class Processor extends MatchEventBase {
+  public process(event: IEvent<any>) {
+    if (EVENT_MAPING[event.type]) {
+      new EVENT_MAPING[event.type](this.socket, this.session).call(event)
+    }
   }
 }

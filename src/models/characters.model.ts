@@ -1,16 +1,18 @@
 import { Sequelize, DataTypes, Model, Optional } from "sequelize"
-import { Character } from "@interfaces/characters.interface"
+import { ICharacter } from "@interfaces/characters.interface"
 import { UserModel } from "./users.model"
 
-export type MatchCreationAttributes = Optional<Character, "id" | "user_id" | "model">
+export type MatchCreationAttributes = Optional<ICharacter, "id" | "user_id" | "model">
 
-export class CharacterModel extends Model<Character, MatchCreationAttributes> implements Character {
+export class CharacterModel extends Model<ICharacter, MatchCreationAttributes> implements ICharacter {
   public id: number
   public user_id: number
   public model: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
+
+  static associate() {}
 }
 
 export default function (sequelize: Sequelize): typeof CharacterModel {

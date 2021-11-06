@@ -5,7 +5,7 @@ class MatchesService {
   public matches = DB.Matches
 
   public async findMatch(uuid: string): Promise<IMatch> {
-    return await this.matches.findOne({ where: { uuid } })
+    return await this.matches.findOne({ where: { uuid }, raw: true })
   }
 }
 
