@@ -41,7 +41,7 @@ export class Map {
     return spawnBlocks
   }
 
-  public async getGroupPoints(groupId: number): Promise<Array<any>> {
+  public async getGroupPoints(groupId: number): Promise<Array<string>> {
     const points = []
 
     const groupResponse = await this.blocksGroupsService.findGroup(groupId)

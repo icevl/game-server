@@ -2,8 +2,10 @@ import { EventType, IEvent, IEventConnect, IPlayer } from "@/interfaces/match/ma
 import UserService from "@services/users.service"
 import CharacterService from "@services/characters.service"
 import { MatchEventBase } from "./MatchEventBase"
+import { Map } from "../Map"
 
 export class MatchAuth extends MatchEventBase {
+  private map = new Map()
   private userService = new UserService()
   private characterService = new CharacterService()
 
@@ -12,17 +14,26 @@ export class MatchAuth extends MatchEventBase {
       const user = await this.userService.findUserById(event.data.user_id)
 
       const character = await this.characterService.findUserCharacter(user.id)
+      const spawnPoint = await this.getSpawnPoint()
 
       const player: IPlayer = {
         user,
         character,
         name: `character_${character.id}`,
-        spawn: "group1__Block1__1__3",
+        spawn: spawnPoint,
         sessionId: this.socket.id
       }
 
       this.session.addPlayer(player)
       this.socket.sendEvent({ type: EventType.SpawnBlocks, data: this.session.map.blocks })
     }
+  }
+
+  private async getSpawnPoint(): Promise<string> {
+    let groupId = 1
+
+    const points = await this.map.getGroupPoints(groupId)
+    return points[1]
+    return ""
   }
 }
