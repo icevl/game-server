@@ -48,6 +48,7 @@ export class MatchMap extends MatchEventBase {
       }
     })
 
+    this.session.setPlayerReady(player.character.id, true)
     this.socket.sendEvent({ type: EventType.SetSpawnGroup, data: { character: player.name, name: player.group } })
   }
 

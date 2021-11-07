@@ -22,6 +22,7 @@ export interface IPlayer {
   name: string
   spawn: string
   group: string | null
+  isReady: boolean
   sessionId: string
 }
 

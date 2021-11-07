@@ -15,6 +15,8 @@ export class Session {
   public match: IMatch
   public map: IMap = {
     blocks: [],
+    stage: 1,
+    stageStartedAt: null,
     startGroupId: null,
     type: "coop"
   }
@@ -30,6 +32,12 @@ export class Session {
   public setPlayerGroup(characterId: number, group: string) {
     this.players.forEach(player => {
       if (player.character.id === characterId) player.group = group
+    })
+  }
+
+  public setPlayerReady(characterId: number, isReady: boolean) {
+    this.players.forEach(player => {
+      if (player.character.id === characterId) player.isReady = isReady
     })
   }
 
@@ -56,6 +64,7 @@ export class Session {
       name: `character_${character.id}`,
       spawn: spawnPoint,
       group: null,
+      isReady: false,
       sessionId: socket ? socket.id : null
     }
 

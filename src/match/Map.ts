@@ -1,11 +1,11 @@
 import BlocksGroupsService from "@services/maps-blocks-groups.service"
-import MapsService from "@services/maps.service"
+import MatchesService from "@services/matches.service"
 import { IMapBlockGroup, IMapBlockResponse } from "@interfaces/match/map.interface"
 import { Session } from "./Session"
 
 export class Map {
   private blocksGroupsService = new BlocksGroupsService()
-  private mapsService = new MapsService()
+  private matchesService = new MatchesService()
   private session: Session
 
   constructor(session: Session) {
@@ -96,5 +96,19 @@ export class Map {
     }
 
     return ""
+  }
+
+  public async isAllPlayersReady(): Promise<boolean> {
+    let isAllReady = true
+    const matchSessions = await this.matchesService.findMatchSessions(this.session.match.id)
+    
+    matchSessions.forEach(matchSession => {
+      if (!matchSession.character.is_bot) {
+        const player = this.session.getCharacterPlayer(matchSession.character_id)
+        if (!player || !player.isReady) isAllReady = false
+      }
+    })
+
+    return isAllReady
   }
 }

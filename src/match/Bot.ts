@@ -27,6 +27,7 @@ export class Bot {
       .forEach(async botSession => {
         await this.session.addCharacter(botSession.character_id)
         this.session.setPlayerGroup(botSession.character_id, spawnGroup.title)
+        this.session.setPlayerReady(botSession.character_id, true)
       })
   }
 }

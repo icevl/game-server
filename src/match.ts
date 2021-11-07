@@ -2,6 +2,7 @@ process.env["NODE_CONFIG_DIR"] = __dirname + "/configs"
 
 import "dotenv/config"
 import { v4 as uuidv4 } from "uuid"
+import dayjs from "dayjs"
 import DB from "@databases"
 import WebSocket, { EventEmitter } from "ws"
 import { Map } from "./match/Map"
@@ -39,12 +40,20 @@ class Match {
       const blocks = await this.map.getSpawnBlocks(match.map_id)
       const mapResponse = await this.mapsService.findMapById(match.map_id)
 
-      this.session.setMapData({ blocks, type: mapResponse.type, startGroupId: mapResponse.start_group_id })
+      this.session.setMapData({
+        blocks,
+        type: mapResponse.type,
+        startGroupId: mapResponse.start_group_id,
+        stage: 1,
+        stageStartedAt: null
+      })
+
       this.session.setMatch(match)
 
       await this.bot.addBots()
 
       this.startServer()
+      this.waitForBegin()
     }
   }
 
@@ -75,6 +84,19 @@ class Match {
       const payload = JSON.parse(data.toString())
       new Processor(socket, this.session).process(payload)
     })
+  }
+
+  private async waitForBegin() {
+    const isAllReady = await this.map.isAllPlayersReady()
+    if (!isAllReady) {
+      console.log("Waiting for players for match start")
+      setTimeout(() => this.waitForBegin(), 2000)
+    } else {
+      console.log("Starting match...")
+
+      this.session.map.stage = 1
+      this.session.map.stageStartedAt = dayjs().toDate()
+    }
   }
 }
 
