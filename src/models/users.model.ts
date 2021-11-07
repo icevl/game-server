@@ -12,7 +12,7 @@ export class UserModel extends Model<IUser, UserCreationAttributes> implements I
   public readonly updatedAt!: Date
 
   static associate(models) {
-    this.hasOne(models.Characters, { foreignKey: "user_id", as: "character" })
+    this.hasMany(models.Characters, { foreignKey: "user_id", as: "character" })
   }
 }
 

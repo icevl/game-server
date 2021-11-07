@@ -6,15 +6,17 @@ export class Session {
   public players: Array<IPlayer> = []
   public match: IMatch
   public map: IMap = {
-    blocks: []
+    blocks: [],
+    startGroupId: null,
+    type: "coop"
   }
 
   public setMatch(match: IMatch) {
     this.match = match
   }
 
-  public setBlocks(blocks: Array<IMapBlockResponse>) {
-    this.map.blocks = blocks
+  public setMapData(map: IMap) {
+    this.map = map
   }
 
   public addPlayer(player: IPlayer) {

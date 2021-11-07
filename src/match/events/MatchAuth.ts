@@ -5,16 +5,21 @@ import { MatchEventBase } from "./MatchEventBase"
 import { Map } from "../Map"
 
 export class MatchAuth extends MatchEventBase {
-  private map = new Map()
+  private map = new Map(this.session)
   private userService = new UserService()
   private characterService = new CharacterService()
 
   public async call(event: IEvent<IEventConnect>) {
     if (event.data.match === this.session.match.uuid) {
-      const user = await this.userService.findUserById(event.data.user_id)
+      const character = await this.characterService.findCharacterById(event.data.character_id)
+      const user = await this.userService.findUserById(character.user_id)
 
-      const character = await this.characterService.findUserCharacter(user.id)
       const spawnPoint = await this.getSpawnPoint()
+
+      const playerExistsSession: IPlayer | null = this.session.players.reduce(
+        (acc, item) => (item.character.id === character.id ? item : acc),
+        null
+      )
 
       const player: IPlayer = {
         user,
@@ -24,16 +29,20 @@ export class MatchAuth extends MatchEventBase {
         sessionId: this.socket.id
       }
 
-      this.session.addPlayer(player)
+      if (!playerExistsSession) {
+        this.session.addPlayer(player)
+      }
+
       this.socket.sendEvent({ type: EventType.SpawnBlocks, data: this.session.map.blocks })
     }
   }
 
   private async getSpawnPoint(): Promise<string> {
-    let groupId = 1
+    if (this.session.map.type === "coop") {
+      const points = await this.map.getGroupPoints(this.session.map.startGroupId)
+      return this.map.getFreeSpawnPoint(points)
+    }
 
-    const points = await this.map.getGroupPoints(groupId)
-    return points[1]
     return ""
   }
 }

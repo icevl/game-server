@@ -6,6 +6,7 @@ import DB from "@databases"
 import WebSocket, { EventEmitter } from "ws"
 import { Map } from "./match/Map"
 import MatchesService from "./services/matches.service"
+import MapsService from "./services/maps.service"
 import { Processor } from "./match/Processor"
 import { Session } from "./match/Session"
 
@@ -20,8 +21,9 @@ class Match {
   private uuid: string
 
   private session: Session = new Session()
-  private map: Map = new Map()
+  private map: Map = new Map(this.session)
   private matchesService = new MatchesService()
+  private mapsService = new MapsService()
 
   constructor(uuid: string) {
     this.uuid = uuid
@@ -29,12 +31,13 @@ class Match {
   }
 
   private async init() {
-    await DB.sequelize.sync({ force: false, alter: false })
+    await DB.sequelize.sync({ force: false, alter: true })
     const match = await this.matchesService.findMatch(this.uuid)
     if (match && match.id) {
       const blocks = await this.map.getSpawnBlocks(match.map_id)
+      const mapResponse = await this.mapsService.findMapById(match.map_id)
 
-      this.session.setBlocks(blocks)
+      this.session.setMapData({ blocks, type: mapResponse.type, startGroupId: mapResponse.start_group_id })
       this.session.setMatch(match)
 
       this.startServer()

@@ -7,7 +7,7 @@ export class MapsModel extends Model<IMap, MapCreationAttributes> implements IMa
   public id: number
   public title: string
   public start_group_id: number
-  public type: string
+  public type: "coop" | "pvp"
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date

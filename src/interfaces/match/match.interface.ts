@@ -7,7 +7,7 @@ export interface IEvent<T> {
 }
 
 export interface IEventConnect {
-  user_id: number
+  character_id: number
   match: string
 }
 

@@ -8,6 +8,7 @@ export class CharacterModel extends Model<ICharacter, MatchCreationAttributes> i
   public id: number
   public user_id: number
   public model: string
+  public is_bot: boolean
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -32,6 +33,11 @@ export default function (sequelize: Sequelize): typeof CharacterModel {
       model: {
         allowNull: false,
         type: DataTypes.STRING(100)
+      },
+      is_bot: {
+        allowNull: false,
+        defaultValue: 0,
+        type: DataTypes.INTEGER
       }
     },
     {

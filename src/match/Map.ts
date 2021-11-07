@@ -1,10 +1,16 @@
 import BlocksGroupsService from "@services/maps-blocks-groups.service"
 import MapsService from "@services/maps.service"
 import { IMapBlockGroup, IMapBlockResponse } from "@interfaces/match/map.interface"
+import { Session } from "./Session"
 
 export class Map {
   private blocksGroupsService = new BlocksGroupsService()
   private mapsService = new MapsService()
+  private session: Session
+
+  constructor(session: Session) {
+    this.session = session
+  }
 
   public async getSpawnBlocks(mapId: number): Promise<Array<IMapBlockResponse>> {
     const blockGroups: Array<IMapBlockGroup> = []
@@ -63,5 +69,23 @@ export class Map {
     })
 
     return points
+  }
+
+  public getFreeSpawnPoint(points: Array<string>): string {
+    let freePoint = ""
+    points
+      .sort((a, b) => 0.5 - Math.random())
+      .forEach(point => {
+        const isFree = this.isSpawnPointFree(point)
+        if (isFree && !freePoint) {
+          freePoint = point
+        }
+      })
+
+    return freePoint
+  }
+
+  public isSpawnPointFree(spawn: string): boolean {
+    return this.session.players.reduce((acc: boolean, item) => (item.spawn === spawn ? false : acc), true)
   }
 }

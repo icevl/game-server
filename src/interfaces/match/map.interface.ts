@@ -15,4 +15,6 @@ export interface IMapBlockResponse {
 
 export interface IMap {
   blocks: Array<IMapBlockResponse>
+  type: "coop" | "pvp"
+  startGroupId?: number // only for coop map
 }
