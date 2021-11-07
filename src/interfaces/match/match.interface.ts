@@ -15,6 +15,7 @@ export interface IPlayer {
   character: ICharacter
   user: IUser
   name: string
+  spawn: string
   sessionId: string
 }
 

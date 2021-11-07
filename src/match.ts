@@ -29,7 +29,7 @@ class Match {
   }
 
   private async init() {
-    await DB.sequelize.sync({ force: false, alter: true })
+    await DB.sequelize.sync({ force: false, alter: false })
     const match = await this.matchesService.findMatch(this.uuid)
     if (match && match.id) {
       const blocks = await this.map.getSpawnBlocks(match.map_id)

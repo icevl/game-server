@@ -25,6 +25,10 @@ export class Session {
     }
   }
 
+  public getCharacterSession(characterId: number) {
+    return this.players.find(player => player.character.id === characterId)
+  }
+
   private userExists(userId: number) {
     return this.players.find(player => player.user.id === userId)
   }

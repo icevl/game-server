@@ -26,13 +26,16 @@ export class MatchMap extends MatchEventBase {
 
   private async spawnPlayers() {
     const sessions = await this.matchesService.findMatchSessions(this.session.match.id)
+
     sessions.forEach(session => {
+      const characterSession = this.session.getCharacterSession(session.character_id)
+
       this.socket.sendEvent({
         type: EventType.SpawnPlayer,
         data: {
           name: `character_${session.character.id}`,
           character: session.character.model,
-          target: "group1__Block2__2__4",
+          target: characterSession.spawn,
           is_main: true,
           weapons: [ak47]
         }

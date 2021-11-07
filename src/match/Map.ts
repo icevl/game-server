@@ -1,8 +1,10 @@
 import BlocksGroupsService from "@services/maps-blocks-groups.service"
+import MapsService from "@services/maps.service"
 import { IMapBlockGroup, IMapBlockResponse } from "@interfaces/match/map.interface"
 
 export class Map {
   private blocksGroupsService = new BlocksGroupsService()
+  private mapsService = new MapsService()
 
   public async getSpawnBlocks(mapId: number): Promise<Array<IMapBlockResponse>> {
     const blockGroups: Array<IMapBlockGroup> = []
@@ -37,5 +39,29 @@ export class Map {
     }
 
     return spawnBlocks
+  }
+
+  public async getGroupPoints(groupId: number): Promise<Array<any>> {
+    const points = []
+
+    const groupResponse = await this.blocksGroupsService.findGroup(groupId)
+    const groupName = groupResponse.title
+
+    const blocksResponse = await this.blocksGroupsService.findGroupBlocks(groupId)
+    const groupSpawnsCount = blocksResponse.reduce((acc, b) => acc + b.capacity, 0)
+
+    let spawnPointIndex = 1
+
+    blocksResponse.forEach(block => {
+      Array(block.capacity)
+        .fill(Number)
+        .map((_, i) => i + 1)
+        .forEach((item: number) => {
+          points.push(`${groupName}__${block.name}__${spawnPointIndex}__${groupSpawnsCount}`)
+          spawnPointIndex += 1
+        })
+    })
+
+    return points
   }
 }

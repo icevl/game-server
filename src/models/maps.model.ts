@@ -6,6 +6,8 @@ export type MapCreationAttributes = Optional<IMap, "id" | "title">
 export class MapsModel extends Model<IMap, MapCreationAttributes> implements IMap {
   public id: number
   public title: string
+  public start_group_id: number
+  public type: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -24,6 +26,15 @@ export default function (sequelize: Sequelize): typeof MapsModel {
       title: {
         allowNull: false,
         type: DataTypes.STRING(100)
+      },
+      type: {
+        allowNull: false,
+        defaultValue: "coop",
+        type: DataTypes.STRING(20)
+      },
+      start_group_id: {
+        allowNull: true,
+        type: DataTypes.INTEGER
       }
     },
     {

@@ -7,6 +7,7 @@ export class MatchesSessionsModel extends Model<IMatchSession, MatchCreationAttr
   public id: number
   public match_id: number
   public character_id: number
+  public side: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -32,6 +33,11 @@ export default function (sequelize: Sequelize): typeof MatchesSessionsModel {
       character_id: {
         allowNull: false,
         type: DataTypes.INTEGER
+      },
+      side: {
+        allowNull: false,
+        defaultValue: "a",
+        type: DataTypes.STRING(1)
       }
     },
     {

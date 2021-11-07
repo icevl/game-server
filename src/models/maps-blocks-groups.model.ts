@@ -10,6 +10,7 @@ export class MapsBlocksGroupsModel extends Model<IMapBlockGroup, MapCreationAttr
   public id: number
   public title: string
   public map_id: number
+  public side: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -35,6 +36,11 @@ export default function (sequelize: Sequelize): typeof MapsBlocksGroupsModel {
       title: {
         allowNull: false,
         type: DataTypes.STRING(100)
+      },
+      side: {
+        allowNull: false,
+        defaultValue: "a",
+        type: DataTypes.STRING(1)
       }
     },
     {

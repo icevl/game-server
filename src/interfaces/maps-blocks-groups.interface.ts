@@ -4,6 +4,7 @@ export interface IMapBlockGroup {
   id: number
   title: string
   map_id: number
+  side: string
 }
 
 export interface IGroups {

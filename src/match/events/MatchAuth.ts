@@ -17,6 +17,7 @@ export class MatchAuth extends MatchEventBase {
         user,
         character,
         name: `character_${character.id}`,
+        spawn: "group1__Block1__1__3",
         sessionId: this.socket.id
       }
 
