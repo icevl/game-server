@@ -31,6 +31,9 @@ export enum EventType {
   SpawnBlocks = "spawn_blocks",
   SpawnBlocksComplete = "spawn_blocks_complete",
   SpawnPlayer = "spawn_player",
+  SpawnNPC = "spawn_npc",
   SetSpawnGroup = "set_group",
   HoldSpawnPoint = "hold_spawn_point"
 }
+
+export type IBroadcast = (event: IEvent<any>) => void

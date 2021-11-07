@@ -5,12 +5,14 @@ import { v4 as uuidv4 } from "uuid"
 import dayjs from "dayjs"
 import DB from "@databases"
 import WebSocket, { EventEmitter } from "ws"
+import { IEvent } from "@/interfaces/match/match.interface"
 import { Map } from "./match/Map"
 import MatchesService from "./services/matches.service"
 import MapsService from "./services/maps.service"
 import { Processor } from "./match/Processor"
 import { Session } from "./match/Session"
 import { Bot } from "./match/Bot"
+import { NpcMachine } from "./match/npc/NpcMachine"
 
 export interface ICustomSocket extends WebSocket {
   isAlive: boolean
@@ -25,6 +27,7 @@ class Match {
   private session: Session = new Session()
   private map: Map = new Map(this.session)
   private bot: Bot = new Bot(this.session)
+  private npcMachine: NpcMachine = new NpcMachine(this.session, this.broadcast.bind(this))
   private matchesService = new MatchesService()
   private mapsService = new MapsService()
 
@@ -51,6 +54,7 @@ class Match {
       this.session.setMatch(match)
 
       await this.bot.addBots()
+      this.npcMachine.start()
 
       this.startServer()
       this.waitForBegin()
@@ -63,13 +67,6 @@ class Match {
       console.log("Server started at port", this.session.match.port)
     })
     this.wss.on("connection", (socket: ICustomSocket) => this.handleConnection(socket))
-
-    // setInterval(() => {
-    //   // @ts-ignore
-    //   this.wss.clients.forEach(client => {
-    //     console.log("Client.ID: " + client.id)
-    //   })
-    // }, 2000)
   }
 
   private handleConnection(socket: ICustomSocket) {
@@ -83,6 +80,13 @@ class Match {
     socket.on("message", data => {
       const payload = JSON.parse(data.toString())
       new Processor(socket, this.session).process(payload)
+    })
+  }
+
+  private broadcast(payload: IEvent<any>) {
+    // @ts-ignore
+    this.wss.clients.forEach(client => {
+      client.send(JSON.stringify(payload))
     })
   }
 

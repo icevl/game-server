@@ -8,6 +8,8 @@ import MatchesSessionsModel from "@models/matches-sessions.model"
 import MapModel from "@models/maps.model"
 import MapsBlocksGroupsModel from "@models/maps-blocks-groups.model"
 import MapsBlocksModel from "@models/maps-blocks.model"
+import NPCsModel from "@models/npcs.model"
+import MapsSpawnsNPCsModel from "@models/maps-spawns-npcs.model"
 
 import { logger } from "@utils/logger"
 
@@ -42,7 +44,9 @@ const models = {
   Maps: MapModel(sequelize),
   MapsBlocksGroups: MapsBlocksGroupsModel(sequelize),
   MapsBlocks: MapsBlocksModel(sequelize),
-  MatchesSessions: MatchesSessionsModel(sequelize)
+  MatchesSessions: MatchesSessionsModel(sequelize),
+  NPCs: NPCsModel(sequelize),
+  MapsSpawnsNPCs: MapsSpawnsNPCsModel(sequelize)
 }
 
 Object.values(models)
