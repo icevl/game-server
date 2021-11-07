@@ -11,11 +11,17 @@ export interface IEventConnect {
   match: string
 }
 
+export interface IEventHoldSpawnPoint {
+  character: string
+  point: string
+}
+
 export interface IPlayer {
   character: ICharacter
   user: IUser
   name: string
   spawn: string
+  group: string | null
   sessionId: string
 }
 
@@ -23,5 +29,7 @@ export enum EventType {
   Connect = "connect",
   SpawnBlocks = "spawn_blocks",
   SpawnBlocksComplete = "spawn_blocks_complete",
-  SpawnPlayer = "spawn_player"
+  SpawnPlayer = "spawn_player",
+  SetSpawnGroup = "set_group",
+  HoldSpawnPoint = "hold_spawn_point"
 }

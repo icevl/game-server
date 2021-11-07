@@ -9,6 +9,7 @@ import MatchesService from "./services/matches.service"
 import MapsService from "./services/maps.service"
 import { Processor } from "./match/Processor"
 import { Session } from "./match/Session"
+import { Bot } from "./match/Bot"
 
 export interface ICustomSocket extends WebSocket {
   isAlive: boolean
@@ -22,6 +23,7 @@ class Match {
 
   private session: Session = new Session()
   private map: Map = new Map(this.session)
+  private bot: Bot = new Bot(this.session)
   private matchesService = new MatchesService()
   private mapsService = new MapsService()
 
@@ -31,7 +33,7 @@ class Match {
   }
 
   private async init() {
-    await DB.sequelize.sync({ force: false, alter: true })
+    await DB.sequelize.sync({ force: false, alter: false })
     const match = await this.matchesService.findMatch(this.uuid)
     if (match && match.id) {
       const blocks = await this.map.getSpawnBlocks(match.map_id)
@@ -39,6 +41,8 @@ class Match {
 
       this.session.setMapData({ blocks, type: mapResponse.type, startGroupId: mapResponse.start_group_id })
       this.session.setMatch(match)
+
+      await this.bot.addBots()
 
       this.startServer()
     }

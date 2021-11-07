@@ -1,48 +1,16 @@
-import { EventType, IEvent, IEventConnect, IPlayer } from "@/interfaces/match/match.interface"
-import UserService from "@services/users.service"
-import CharacterService from "@services/characters.service"
+import { EventType, IEvent, IEventConnect } from "@/interfaces/match/match.interface"
+import BlocksGroupsService from "@services/maps-blocks-groups.service"
 import { MatchEventBase } from "./MatchEventBase"
-import { Map } from "../Map"
 
 export class MatchAuth extends MatchEventBase {
-  private map = new Map(this.session)
-  private userService = new UserService()
-  private characterService = new CharacterService()
-
+  private blocksGroupsService = new BlocksGroupsService()
   public async call(event: IEvent<IEventConnect>) {
     if (event.data.match === this.session.match.uuid) {
-      const character = await this.characterService.findCharacterById(event.data.character_id)
-      const user = await this.userService.findUserById(character.user_id)
+      const spawnGroup = await this.blocksGroupsService.findGroup(this.session.map.startGroupId)
 
-      const spawnPoint = await this.getSpawnPoint()
-
-      const playerExistsSession: IPlayer | null = this.session.players.reduce(
-        (acc, item) => (item.character.id === character.id ? item : acc),
-        null
-      )
-
-      const player: IPlayer = {
-        user,
-        character,
-        name: `character_${character.id}`,
-        spawn: spawnPoint,
-        sessionId: this.socket.id
-      }
-
-      if (!playerExistsSession) {
-        this.session.addPlayer(player)
-      }
-
+      await this.session.addCharacter(event.data.character_id, this.socket)
+      this.session.setPlayerGroup(event.data.character_id, spawnGroup.title)
       this.socket.sendEvent({ type: EventType.SpawnBlocks, data: this.session.map.blocks })
     }
-  }
-
-  private async getSpawnPoint(): Promise<string> {
-    if (this.session.map.type === "coop") {
-      const points = await this.map.getGroupPoints(this.session.map.startGroupId)
-      return this.map.getFreeSpawnPoint(points)
-    }
-
-    return ""
   }
 }

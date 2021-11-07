@@ -1,7 +1,5 @@
 import DB from "@databases"
-import { MapsBlocksModel } from "@models/maps-blocks.model"
 import { MapsBlocksGroupsModel } from "@models/maps-blocks-groups.model"
-import { IMatch } from "@interfaces/matches.interface"
 
 class BlocksGroupsService {
   public blockGroups = DB.MapsBlocksGroups

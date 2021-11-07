@@ -5,7 +5,8 @@ import { MatchEventBase } from "./events/MatchEventBase"
 
 const EVENT_MAPING = {
   [EventType.Connect]: MatchAuth,
-  [EventType.SpawnBlocksComplete]: MatchMap
+  [EventType.SpawnBlocksComplete]: MatchMap,
+  [EventType.HoldSpawnPoint]: MatchMap
 }
 
 export class Processor extends MatchEventBase {

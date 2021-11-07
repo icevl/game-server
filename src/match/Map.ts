@@ -88,4 +88,13 @@ export class Map {
   public isSpawnPointFree(spawn: string): boolean {
     return this.session.players.reduce((acc: boolean, item) => (item.spawn === spawn ? false : acc), true)
   }
+
+  public async getSpawnPoint(): Promise<string> {
+    if (this.session.map.type === "coop") {
+      const points = await this.getGroupPoints(this.session.map.startGroupId)
+      return this.getFreeSpawnPoint(points)
+    }
+
+    return ""
+  }
 }
