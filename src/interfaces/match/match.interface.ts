@@ -11,6 +11,12 @@ export interface IEventConnect {
   match: string
 }
 
+export interface IEventDamage {
+  character: string
+  damage: number
+  damage_type: number
+}
+
 export interface IEventHoldSpawnPoint {
   character: string
   point: string
@@ -24,6 +30,7 @@ export interface IPlayer {
   group: string | null
   isReady: boolean
   sessionId: string
+  attackTo?: string
 }
 
 export enum EventType {
@@ -33,7 +40,8 @@ export enum EventType {
   SpawnPlayer = "spawn_player",
   SpawnNPC = "spawn_npc",
   SetSpawnGroup = "set_group",
-  HoldSpawnPoint = "hold_spawn_point"
+  HoldSpawnPoint = "hold_spawn_point",
+  Damage = "damage"
 }
 
 export type IBroadcast = (event: IEvent<any>) => void

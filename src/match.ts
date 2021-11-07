@@ -18,6 +18,7 @@ export interface ICustomSocket extends WebSocket {
   isAlive: boolean
   id: string
   sendEvent: (payload: any) => void
+  sendToOthers: (payload: any) => void
 }
 
 class Match {
@@ -26,7 +27,7 @@ class Match {
 
   private session: Session = new Session()
   private map: Map = new Map(this.session)
-  private bot: Bot = new Bot(this.session)
+  private bot: Bot = new Bot(this.session, this.broadcast.bind(this))
   private npcMachine: NpcMachine = new NpcMachine(this.session, this.broadcast.bind(this))
   private matchesService = new MatchesService()
   private mapsService = new MapsService()
@@ -76,6 +77,10 @@ class Match {
       socket.send(JSON.stringify(payload))
     }
 
+    socket.sendToOthers = (payload: any) => {
+      this.sendToOthers(socket.id, payload)
+    }
+
     socket.on("pong", () => (socket.isAlive = true))
     socket.on("message", data => {
       const payload = JSON.parse(data.toString())
@@ -88,6 +93,15 @@ class Match {
     this.wss.clients.forEach(client => {
       client.send(JSON.stringify(payload))
     })
+  }
+
+  private sendToOthers(sessionId: string, payload: IEvent<any>) {
+    // @ts-ignore
+    this.wss.clients
+      .filter(client => client.id !== sessionId)
+      .forEach(client => {
+        client.send(JSON.stringify(payload))
+      })
   }
 
   private async waitForBegin() {

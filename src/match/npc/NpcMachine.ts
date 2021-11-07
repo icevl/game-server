@@ -1,5 +1,5 @@
 import { Session } from "../Session"
-import { IBroadcast } from "@/interfaces/match/match.interface"
+import { IBroadcast } from "@interfaces/match/match.interface"
 import { INPCSpawns } from "@interfaces/match/npc.interface"
 import NPCService from "@services/npc.service"
 import { NpcSpawner } from "./NpcSpawner"

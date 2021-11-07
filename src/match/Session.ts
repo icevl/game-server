@@ -5,6 +5,7 @@ import { ICustomSocket } from "../match"
 import { IPlayer } from "@interfaces/match/match.interface"
 import { IMatch } from "@interfaces/matches.interface"
 import { IMap } from "@interfaces/match/map.interface"
+import { SpawnedNPC } from "@interfaces/match/npc.interface"
 
 export class Session {
   private userService = new UserService()
@@ -12,6 +13,8 @@ export class Session {
   private mapHandler = new Map(this)
 
   public players: Array<IPlayer> = []
+  public npcs: Array<SpawnedNPC> = []
+
   public match: IMatch
   public map: IMap = {
     blocks: [],
@@ -73,12 +76,20 @@ export class Session {
     }
   }
 
+  public addNPC(npc: SpawnedNPC) {
+    this.npcs.push(npc)
+  }
+
   public getSocketPlayer(socketId: string): IPlayer {
     return this.players.find(player => player.sessionId === socketId)
   }
 
   public getPlayerByName(name: string): IPlayer {
     return this.players.find(player => player.name === name)
+  }
+
+  public getNPCByName(name: string): SpawnedNPC {
+    return this.npcs.find(npc => npc.name === name)
   }
 
   public getCharacterPlayer(characterId: number) {
