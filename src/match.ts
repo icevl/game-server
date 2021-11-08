@@ -84,7 +84,7 @@ class Match {
     socket.on("pong", () => (socket.isAlive = true))
     socket.on("message", data => {
       const payload = JSON.parse(data.toString())
-      new Processor(socket, this.session).process(payload)
+      new Processor(socket, this.session, this.bot).process(payload)
     })
   }
 

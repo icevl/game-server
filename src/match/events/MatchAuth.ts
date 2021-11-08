@@ -12,5 +12,12 @@ export class MatchAuth extends MatchEventBase {
       this.session.setPlayerGroup(event.data.character_id, spawnGroup.title)
       this.socket.sendEvent({ type: EventType.SpawnBlocks, data: this.session.map.blocks })
     }
+
+    this.sendMasterCharacter()
+  }
+
+  private async sendMasterCharacter() {
+    const masterCharacter = await this.session.getMasterCharacter()
+    this.socket.sendEvent({ type: EventType.SetMasterPlayer, data: { character: masterCharacter } })
   }
 }

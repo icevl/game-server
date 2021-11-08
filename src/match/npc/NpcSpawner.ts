@@ -2,7 +2,8 @@ import dayjs from "dayjs"
 import { IBroadcast, EventType } from "@/interfaces/match/match.interface"
 import { Session } from "../Session"
 import { IMapSpawnNPC } from "@interfaces/maps-spawns-npcs.interface"
-import { SpawnedNPC } from "@interfaces/match/npc.interface"
+
+import { Npc } from "./Npc"
 
 export class NpcSpawner {
   private spawn: IMapSpawnNPC
@@ -57,25 +58,10 @@ export class NpcSpawner {
   }
 
   private spawnLoop() {
-    const { npc } = this.spawn
+    const npc = new Npc(this.spawn, this.broadcast, this.getEnemy())
 
-    const data: SpawnedNPC = {
-      character: this.spawn.npc.model,
-      name: `npc_${npc.name}_${Math.round(Math.random() * 10000)}`,
-      attack_target: this.getEnemy(),
-      config: {
-        name: npc.name,
-        health: npc.health,
-        move_speed: npc.move_speed,
-        attack_speed: npc.attack_speed,
-        attack_distance: npc.attack_distance,
-        attack: npc.attack,
-        defence: npc.defence
-      }
-    }
-
-    this.session.addNPC(data)
-    this.broadcast({ type: EventType.SpawnNPC, data })
+    this.session.addNPC(npc)
+    this.broadcast({ type: EventType.SpawnNPC, data: npc.data })
   }
 
   private getEnemy() {

@@ -1,5 +1,5 @@
 import { Session } from "./Session"
-import { IBroadcast } from "@interfaces/match/match.interface"
+import { IBroadcast, EventType } from "@interfaces/match/match.interface"
 import MatchesService from "@services/matches.service"
 import BlocksGroupsService from "@services/maps-blocks-groups.service"
 
@@ -22,22 +22,49 @@ export class Bot {
     }
   }
 
-  private loop() {
-    // console.log("LOOP here", this.session.npcs)
+  public enemyDead(enemyCharacter: string) {
+    this.releaseEnemyAttackers(enemyCharacter)
+    this.agro()
+    this.checkIdleBots()
+  }
 
-    this.session.players.forEach(player => {
-      if (player.character.is_bot && !player.attackTo) {
-        const aliveNPCs = this.session.npcs.filter(npc => npc.config.health > 0)
+  private get bots() {
+    return this.session.players.filter(player => player.character.is_bot)
+  }
+
+  private releaseEnemyAttackers(character: string) {
+    this.bots.forEach(bot => {
+      if (bot.attackTo === character) {
+        bot.attackTo = null
+      }
+    })
+  }
+
+  private loop() {
+    this.agro()
+
+    setTimeout(() => this.loop(), 1000)
+  }
+
+  private agro() {
+    this.bots.forEach(bot => {
+      if (!bot.attackTo) {
+        const aliveNPCs = this.session.npcs.filter(npc => npc.current_health > 0)
         if (aliveNPCs.length) {
           const enemy = aliveNPCs[0].name
-
-          // @ts-ignore
-          this.broadcast({ type: "bot_attack_start", data: { bot: player.name, enemy: enemy } })
+          bot.attackTo = enemy
+          this.broadcast({ type: EventType.BotAttackStart, data: { bot: bot.name, enemy: enemy } })
         }
       }
     })
+  }
 
-    setTimeout(() => this.loop(), 1000)
+  private checkIdleBots() {
+    this.bots.forEach(bot => {
+      if (!bot.attackTo) {
+        this.broadcast({ type: EventType.BotAttackStop, data: { bot: bot.name } })
+      }
+    })
   }
 
   private async addCoopBots() {

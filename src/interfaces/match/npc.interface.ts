@@ -6,6 +6,7 @@ export interface SpawnedNPC {
   character: string
   name: string
   attack_target: string
+  current_health: number
   config: {
     name: string
     health: number

@@ -14,7 +14,7 @@ const EVENT_MAPING = {
 export class Processor extends MatchEventBase {
   public process(event: IEvent<any>) {
     if (EVENT_MAPING[event.type]) {
-      new EVENT_MAPING[event.type](this.socket, this.session).call(event)
+      new EVENT_MAPING[event.type](this.socket, this.session, this.bot).call(event)
     }
   }
 }

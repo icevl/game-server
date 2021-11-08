@@ -29,6 +29,7 @@ export interface IPlayer {
   spawn: string
   group: string | null
   isReady: boolean
+  isMaster: boolean
   sessionId: string
   attackTo?: string
 }
@@ -39,9 +40,13 @@ export enum EventType {
   SpawnBlocksComplete = "spawn_blocks_complete",
   SpawnPlayer = "spawn_player",
   SpawnNPC = "spawn_npc",
+  NPCScream = "npc_scream",
   SetSpawnGroup = "set_group",
   HoldSpawnPoint = "hold_spawn_point",
-  Damage = "damage"
+  Damage = "damage",
+  BotAttackStart = "bot_attack_start",
+  BotAttackStop = "bot_attack_stop",
+  SetMasterPlayer = "set_master_player"
 }
 
 export type IBroadcast = (event: IEvent<any>) => void

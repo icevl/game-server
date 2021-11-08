@@ -6,6 +6,7 @@ export interface IMatchSession {
   match_id: number
   character_id: number
   side: string;
+  is_master: boolean
   character?: ICharacter
   user?: IUser
 }
