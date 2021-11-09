@@ -65,5 +65,6 @@ export class NpcSpawner {
 
     this.session.addNPC(npc)
     this.broadcast({ type: EventType.SpawnNPC, data: npc.data })
+    console.log(`[SPAWN]: ${npc.config.name} to ${npc.spawnPoint}`)
   }
 }

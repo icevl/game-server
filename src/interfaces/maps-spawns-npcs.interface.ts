@@ -8,5 +8,6 @@ export interface IMapSpawnNPC {
   duration: number
   amount: number
   npc_id: number
+  group_id: number
   npc?: INPC
 }

@@ -20,6 +20,7 @@ export class Npc {
 
   private loopInterval: NodeJS.Timer
 
+  public spawnPoint: string
   public character: string
   public name: string
   public attackTarget: string
@@ -30,6 +31,7 @@ export class Npc {
 
   constructor(session: Session, spawn: IMapSpawnNPC, broadcast: IBroadcast) {
     const { npc } = spawn
+    const spawnGroup = session.map.npcSpawnPoints[spawn.group_id]
 
     this.session = session
     this.spawn = spawn
@@ -39,6 +41,7 @@ export class Npc {
     this.name = `npc_${npc.name}_${Math.round(Math.random() * 10000)}`
     this.attackTarget = this.getEnemy()
     this.currentHealth = spawn.npc.health
+    this.spawnPoint = `${spawnGroup.name}__${spawnGroup.points[Math.floor(Math.random() * spawnGroup.points.length)]}`
     this.config = {
       name: npc.name,
       health: npc.health,
@@ -58,6 +61,7 @@ export class Npc {
       name: this.name,
       attack_target: this.attackTarget,
       current_health: this.currentHealth,
+      spawn_point: this.spawnPoint,
       config: this.config as NPCConfig
     }
   }

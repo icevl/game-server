@@ -18,7 +18,8 @@ export class Session {
     stagesCount: 1,
     stageStartedAt: null,
     startGroupId: null,
-    type: "coop"
+    type: "coop",
+    npcSpawnPoints: {}
   }
 
   public setMatch(match: IMatch) {

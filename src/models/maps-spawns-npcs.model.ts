@@ -11,12 +11,14 @@ export class MapsSpawnsNPCsModel extends Model<IMapSpawnNPC, NpcCreationAttribut
   public duration: number
   public amount: number
   public npc_id: number
+  public group_id: number
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
 
   static associate(models) {
     this.belongsTo(models.NPCs, { foreignKey: "npc_id", as: "npc" })
+    this.belongsTo(models.MapsSpawnsNPCsGroups, { foreignKey: "group_id", as: "group" })
     this.belongsTo(models.Maps, { foreignKey: "map_id" })
   }
 }
@@ -53,8 +55,11 @@ export default function (sequelize: Sequelize): typeof MapsSpawnsNPCsModel {
         type: DataTypes.INTEGER
       },
       npc_id: {
-        allowNull: false,
-        defaultValue: 0,
+        allowNull: true,
+        type: DataTypes.INTEGER
+      },
+      group_id: {
+        allowNull: true,
         type: DataTypes.INTEGER
       }
     },

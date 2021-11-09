@@ -40,21 +40,32 @@ class Match {
   }
 
   private async init() {
-    await DB.sequelize.sync({ force: false, alter: false })
+    await DB.sequelize.sync({ force: false, alter: true })
     const match = await this.matchesService.findMatch(this.uuid)
     if (match && match.id) {
       const blocks = await this.map.getSpawnBlocks(match.map_id)
       const mapResponse = await this.mapsService.findMapById(match.map_id)
 
+      const npcSpawnPoints = {}
       let stagesCount = 1
 
       if (mapResponse.type === "coop") {
         stagesCount = await this.npcService.stagesCount(match.map_id)
+
+        // Map NPC spawn points hash
+        const npcMapGroups = await this.npcService.findSpawnsPoints(match.map_id)
+        npcMapGroups.forEach(group => {
+          npcSpawnPoints[group.id] = { name: group.name, points: [] }
+          group.points.forEach(point => {
+            npcSpawnPoints[group.id].points.push(point.name)
+          })
+        })
       }
 
       this.session.setMapData({
         blocks,
         stagesCount,
+        npcSpawnPoints,
         type: mapResponse.type,
         startGroupId: mapResponse.start_group_id,
         stage: 1,
