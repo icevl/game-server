@@ -9,6 +9,7 @@ import { IEvent } from "@/interfaces/match/match.interface"
 import { Map } from "./match/Map"
 import MatchesService from "./services/matches.service"
 import MapsService from "./services/maps.service"
+import NPCService from "./services/npc.service"
 import { Processor } from "./match/Processor"
 import { Session } from "./match/Session"
 import { Bot } from "./match/Bot"
@@ -31,6 +32,7 @@ class Match {
   private npcMachine: NpcMachine = new NpcMachine(this.session, this.broadcast.bind(this))
   private matchesService = new MatchesService()
   private mapsService = new MapsService()
+  private npcService = new NPCService()
 
   constructor(uuid: string) {
     this.uuid = uuid
@@ -44,8 +46,15 @@ class Match {
       const blocks = await this.map.getSpawnBlocks(match.map_id)
       const mapResponse = await this.mapsService.findMapById(match.map_id)
 
+      let stagesCount = 1
+
+      if (mapResponse.type === "coop") {
+        stagesCount = await this.npcService.stagesCount(match.map_id)
+      }
+
       this.session.setMapData({
         blocks,
+        stagesCount,
         type: mapResponse.type,
         startGroupId: mapResponse.start_group_id,
         stage: 1,

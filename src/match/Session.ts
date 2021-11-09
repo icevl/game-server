@@ -15,6 +15,7 @@ export class Session {
   public map: IMap = {
     blocks: [],
     stage: 1,
+    stagesCount: 1,
     stageStartedAt: null,
     startGroupId: null,
     type: "coop"
@@ -55,6 +56,8 @@ export class Session {
     if (!playerExistsSession) {
       const player = await new Player(this).create(characterId, socket)
       this.players.push(player)
+    } else {
+      playerExistsSession.reconnect(socket)
     }
   }
 
@@ -66,6 +69,14 @@ export class Session {
     const sessions = await this.matchesService.findMatchSessions(this.match.id)
     const masterCharacter = sessions.find(session => session.is_master)
     return `character_${masterCharacter.id}`
+  }
+
+  public getLiveNPCs() {
+    return this.npcs.filter(npc => npc.currentHealth > 0)
+  }
+
+  public getOnlinePlayers() {
+    return this.players.filter(player => player.isOnline)
   }
 
   public getSocketPlayer(socketId: string): Player {

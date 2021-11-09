@@ -1,5 +1,7 @@
+import { NpcSpawner } from "../../match/npc/NpcSpawner"
+
 export interface INPCSpawns {
-  [key: number]: any
+  [key: number]: NpcSpawner
 }
 
 export interface SpawnedNPC {

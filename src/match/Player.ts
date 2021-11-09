@@ -1,5 +1,7 @@
+import dayjs from "dayjs"
 import { ICharacter } from "@interfaces/characters.interface"
 import { IUser } from "@interfaces/users.interface"
+import { EventType } from "@interfaces/match/match.interface"
 import UserService from "@services/users.service"
 import CharacterService from "@services/characters.service"
 import MatchesService from "@services/matches.service"
@@ -13,6 +15,8 @@ export class Player {
   private matchesService = new MatchesService()
   private mapHandler: Map
 
+  private pingInterval: NodeJS.Timer
+
   private session: Session
 
   public character: ICharacter
@@ -23,6 +27,7 @@ export class Player {
   public isReady: boolean
   public isMaster: boolean
   public sessionId: string
+  public lastActiveAt: Date
   public attackTo?: string
   public socket?: ICustomSocket
 
@@ -49,7 +54,41 @@ export class Player {
     this.isMaster = characterSession.is_master
     this.sessionId = socket ? socket.id : null
     this.socket = socket
+    this.lastActiveAt = dayjs().toDate()
+
+    if (!this.character.is_bot) this.startPing()
 
     return this
+  }
+
+  public get lastActiveAgo(): number {
+    if (this.character.is_bot) return 0
+    return dayjs().diff(dayjs(this.lastActiveAt), "seconds")
+  }
+
+  public get isOnline() {
+    return this.lastActiveAgo <= 7
+  }
+
+  public destroy() {
+    clearInterval(this.pingInterval)
+  }
+
+  public keepAlive() {
+    this.lastActiveAt = dayjs().toDate()
+  }
+
+  public reconnect(socket: ICustomSocket) {
+    this.sessionId = socket.id
+    this.socket = socket
+    this.keepAlive()
+    clearInterval(this.pingInterval)
+    this.startPing()
+  }
+
+  private startPing() {
+    this.pingInterval = setInterval(() => {
+      this.socket.sendEvent({ type: EventType.Ping })
+    }, 2000)
   }
 }

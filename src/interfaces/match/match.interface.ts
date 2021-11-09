@@ -36,6 +36,8 @@ export interface IPlayer {
 
 export enum EventType {
   Connect = "connect",
+  Ping = "ping",
+  Pong = "pong",
   SpawnBlocks = "spawn_blocks",
   SpawnBlocksComplete = "spawn_blocks_complete",
   SpawnPlayer = "spawn_player",

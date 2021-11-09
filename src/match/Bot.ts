@@ -49,14 +49,27 @@ export class Bot {
   private agro() {
     this.bots.forEach(bot => {
       if (!bot.attackTo) {
-        const aliveNPCs = this.session.npcs.filter(npc => npc.current_health > 0)
+        const aliveNPCs = this.session.npcs.filter(npc => npc.currentHealth > 0)
         if (aliveNPCs.length) {
           const enemy = aliveNPCs[0].name
           bot.attackTo = enemy
+
           this.broadcast({ type: EventType.BotAttackStart, data: { bot: bot.name, enemy: enemy } })
         }
+      } else {
+        const npc = this.session.getNPCByName(bot.attackTo)
+        if (npc && npc.currentHealth <= 0) bot.attackTo = this.getRandomEnemy()
       }
     })
+  }
+
+  private getRandomEnemy(): string {
+    const aliveNPCs = this.session.npcs.filter(npc => npc.currentHealth > 0)
+    if (aliveNPCs.length) {
+      return aliveNPCs[0].name
+    }
+
+    return ""
   }
 
   private checkIdleBots() {

@@ -1,11 +1,13 @@
 import { IEvent, EventType } from "@interfaces/match/match.interface"
 import { MatchAuth } from "./events/MatchAuth"
+import { Pong } from "./events/Pong"
 import { MatchMap } from "./events/MatchMap"
 import { Damage } from "./events/Damage"
 import { MatchEventBase } from "./events/MatchEventBase"
 
 const EVENT_MAPING = {
   [EventType.Connect]: MatchAuth,
+  [EventType.Pong]: Pong,
   [EventType.SpawnBlocksComplete]: MatchMap,
   [EventType.HoldSpawnPoint]: MatchMap,
   [EventType.Damage]: Damage

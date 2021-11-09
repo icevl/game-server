@@ -17,6 +17,7 @@ export interface IMap {
   blocks: Array<IMapBlockResponse>
   type: "coop" | "pvp"
   stage: number
+  stagesCount: number
   stageStartedAt: Date | null
   startGroupId?: number // only for coop map
 }

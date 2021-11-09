@@ -8,7 +8,7 @@ export class Damage extends MatchEventBase {
     if (npc) {
       npc.getDamage(event.data.damage)
 
-      if (npc.current_health == 0) {
+      if (npc.currentHealth == 0) {
         this.bot.enemyDead(event.data.character)
       }
     }

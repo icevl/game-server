@@ -5,7 +5,7 @@ import { MatchEventBase } from "./MatchEventBase"
 const ak47 = {
   name: "AK47",
   magazine: 60,
-  accuracy: 60,
+  accuracy: 100, //60,
   reload_time: 1,
   rate: 600,
   damage: 100

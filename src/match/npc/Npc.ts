@@ -1,6 +1,7 @@
 import { IMapSpawnNPC } from "@interfaces/maps-spawns-npcs.interface"
 import { SpawnedNPC } from "@interfaces/match/npc.interface"
 import { IBroadcast, EventType } from "@interfaces/match/match.interface"
+import { Session } from "../Session"
 
 interface NPCConfig {
   name: string
@@ -13,27 +14,31 @@ interface NPCConfig {
 }
 
 export class Npc {
+  private session: Session
   private spawn: IMapSpawnNPC
   private broadcast: IBroadcast
 
+  private loopInterval: NodeJS.Timer
+
   public character: string
   public name: string
-  public attack_target: string
-  public current_health: number
+  public attackTarget: string
+  public currentHealth: number
   public config: Partial<NPCConfig> = {}
 
   private isScream: boolean = false
 
-  constructor(spawn: IMapSpawnNPC, broadcast: IBroadcast, attackTarget: string) {
+  constructor(session: Session, spawn: IMapSpawnNPC, broadcast: IBroadcast) {
     const { npc } = spawn
 
+    this.session = session
     this.spawn = spawn
     this.broadcast = broadcast
 
     this.character = npc.model
     this.name = `npc_${npc.name}_${Math.round(Math.random() * 10000)}`
-    this.attack_target = attackTarget
-    this.current_health = spawn.npc.health
+    this.attackTarget = this.getEnemy()
+    this.currentHealth = spawn.npc.health
     this.config = {
       name: npc.name,
       health: npc.health,
@@ -51,22 +56,49 @@ export class Npc {
     return {
       character: this.character,
       name: this.name,
-      attack_target: this.attack_target,
-      current_health: this.current_health,
+      attack_target: this.attackTarget,
+      current_health: this.currentHealth,
       config: this.config as NPCConfig
     }
   }
 
   public getDamage(damage: number) {
-    this.current_health -= damage
+    this.currentHealth -= damage
 
-    if (!this.isScream && this.current_health <= this.config.health / 2) {
+    if (!this.isScream && this.currentHealth <= this.config.health / 2) {
       this.isScream = true
       this.broadcast({ type: EventType.NPCScream, data: { character: this.name } })
     }
 
-    if (this.current_health < 0) this.current_health = 0
+    if (this.currentHealth <= 0) {
+      this.currentHealth = 0
+      this.destroy()
+    }
   }
 
-  private call() {}
+  private call() {
+    this.loopInterval = setInterval(() => this.loop(), 1000)
+  }
+
+  private loop() {
+    this.checkTargetIsOnline()
+  }
+
+  private checkTargetIsOnline() {
+    if (this.attackTarget) {
+      const targetCharacter = this.session.getPlayerByName(this.attackTarget)
+      if (!targetCharacter.isOnline) {
+        this.attackTarget = this.getEnemy()
+      }
+    }
+  }
+
+  private getEnemy() {
+    const players = this.session.getOnlinePlayers()
+    return players[Math.floor(Math.random() * players.length)].name
+  }
+
+  private destroy() {
+    clearInterval(this.loopInterval)
+  }
 }
