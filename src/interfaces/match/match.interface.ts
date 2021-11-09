@@ -48,7 +48,8 @@ export enum EventType {
   Damage = "damage",
   BotAttackStart = "bot_attack_start",
   BotAttackStop = "bot_attack_stop",
-  SetMasterPlayer = "set_master_player"
+  SetMasterPlayer = "set_master_player",
+  MissionText = "mission_text"
 }
 
 export type IBroadcast = (event: IEvent<any>) => void

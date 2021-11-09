@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid"
 import dayjs from "dayjs"
 import DB from "@databases"
 import WebSocket, { EventEmitter } from "ws"
-import { IEvent } from "@/interfaces/match/match.interface"
+import { IEvent, EventType } from "@/interfaces/match/match.interface"
 import { Map } from "./match/Map"
 import MatchesService from "./services/matches.service"
 import MapsService from "./services/maps.service"
@@ -134,6 +134,8 @@ class Match {
 
       this.session.map.stage = 1
       this.session.map.stageStartedAt = dayjs().toDate()
+
+      this.broadcast({ type: EventType.MissionText, data: { text: "Тут будет текст миссии" } })
     }
   }
 }
