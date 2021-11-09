@@ -1,20 +1,14 @@
-import UserService from "@services/users.service"
-import CharacterService from "@services/characters.service"
 import MatchesService from "@services/matches.service"
-import { Map } from "./Map"
 import { Npc } from "./npc/Npc"
 import { ICustomSocket } from "../match"
-import { IPlayer } from "@interfaces/match/match.interface"
 import { IMatch } from "@interfaces/matches.interface"
 import { IMap } from "@interfaces/match/map.interface"
+import { Player } from "./Player"
 
 export class Session {
-  private userService = new UserService()
-  private characterService = new CharacterService()
   private matchesService = new MatchesService()
-  private mapHandler = new Map(this)
 
-  public players: Array<IPlayer> = []
+  public players: Array<Player> = []
   public npcs: Array<Npc> = []
 
   public match: IMatch
@@ -53,31 +47,13 @@ export class Session {
   }
 
   public async addCharacter(characterId: number, socket?: ICustomSocket | null) {
-    const sessions = await this.matchesService.findMatchSessions(this.match.id)
-    const characterSession = sessions.find(session => session.character_id === characterId)
-
-    const character = await this.characterService.findCharacterById(characterId)
-    const user = await this.userService.findUserById(character.user_id)
-
-    const spawnPoint = await this.mapHandler.getSpawnPoint()
-
-    const playerExistsSession: IPlayer | null = this.players.reduce(
-      (acc, item) => (item.character.id === character.id ? item : acc),
+    const playerExistsSession: Player | null = this.players.reduce(
+      (acc, player) => (player.character.id === characterId ? player : acc),
       null
     )
 
-    const player: IPlayer = {
-      user,
-      character,
-      name: `character_${character.id}`,
-      spawn: spawnPoint,
-      group: null,
-      isReady: false,
-      isMaster: characterSession.is_master,
-      sessionId: socket ? socket.id : null
-    }
-
     if (!playerExistsSession) {
+      const player = await new Player(this).create(characterId, socket)
       this.players.push(player)
     }
   }
@@ -92,11 +68,11 @@ export class Session {
     return `character_${masterCharacter.id}`
   }
 
-  public getSocketPlayer(socketId: string): IPlayer {
+  public getSocketPlayer(socketId: string): Player {
     return this.players.find(player => player.sessionId === socketId)
   }
 
-  public getPlayerByName(name: string): IPlayer {
+  public getPlayerByName(name: string): Player {
     return this.players.find(player => player.name === name)
   }
 
