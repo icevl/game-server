@@ -11,6 +11,16 @@ const ak47 = {
   damage: 100
 }
 
+const electro = {
+  name: "Electro",
+  magazine: 160,
+  accuracy: 100, //60,
+  reload_time: 1,
+  rate: 300,
+  damage: 300
+}
+
+
 export class MatchMap extends MatchEventBase {
   private matchesService = new MatchesService()
 
@@ -43,7 +53,7 @@ export class MatchMap extends MatchEventBase {
             target: characterPlayer.spawn,
             is_main: player.character.id === session.character_id,
             is_bot: player.character.is_bot,
-            weapons: [ak47]
+            weapons: [ak47, electro]
           }
         })
       }
