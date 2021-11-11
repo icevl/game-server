@@ -20,7 +20,6 @@ const electro = {
   damage: 300
 }
 
-
 export class MatchMap extends MatchEventBase {
   private matchesService = new MatchesService()
 
@@ -45,7 +44,7 @@ export class MatchMap extends MatchEventBase {
       const characterPlayer = this.session.getCharacterPlayer(session.character_id)
 
       if (characterPlayer) {
-        this.socket.sendEvent({
+        const playerPayloadEvent = {
           type: EventType.SpawnPlayer,
           data: {
             name: `character_${session.character.id}`,
@@ -55,7 +54,15 @@ export class MatchMap extends MatchEventBase {
             is_bot: player.character.is_bot,
             weapons: [ak47, electro]
           }
-        })
+        }
+
+        this.socket.sendEvent(playerPayloadEvent)
+
+        // Send event to other players
+        if (player.character.id === session.character_id) {
+          playerPayloadEvent.data.is_main = false
+          this.session.sendToOthers(player.character.id, playerPayloadEvent)
+        }
       }
     })
 

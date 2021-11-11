@@ -1,5 +1,7 @@
+import { EventEmitter } from "ws"
 import MatchesService from "@services/matches.service"
 import { Npc } from "./npc/Npc"
+import { IEvent } from "@interfaces/match/match.interface"
 import { ICustomSocket } from "../match"
 import { IMatch } from "@interfaces/matches.interface"
 import { IMap } from "@interfaces/match/map.interface"
@@ -7,6 +9,8 @@ import { Player } from "./Player"
 
 export class Session {
   private matchesService = new MatchesService()
+
+  public wss: EventEmitter
 
   public players: Array<Player> = []
   public npcs: Array<Npc> = []
@@ -94,5 +98,15 @@ export class Session {
 
   public getCharacterPlayer(characterId: number) {
     return this.players.find(player => player.character.id === characterId)
+  }
+
+  public sendToOthers(characterId: number, payload: IEvent<any>) {
+    const player = this.getCharacterPlayer(characterId)
+    // @ts-ignore
+    this.wss.clients.forEach(client => {
+      if (client.id !== player.sessionId) {
+        client.send(JSON.stringify(payload))
+      }
+    })
   }
 }

@@ -23,7 +23,7 @@ export interface ICustomSocket extends WebSocket {
 }
 
 class Match {
-  private wss: EventEmitter
+  // private wss: EventEmitter
   private uuid: string
 
   private session: Session = new Session()
@@ -83,11 +83,11 @@ class Match {
   }
 
   private startServer() {
-    this.wss = new WebSocket.Server({ port: this.session.match.port })
-    this.wss.on("listening", () => {
+    this.session.wss = new WebSocket.Server({ port: this.session.match.port })
+    this.session.wss.on("listening", () => {
       console.log("Server started at port", this.session.match.port)
     })
-    this.wss.on("connection", (socket: ICustomSocket) => this.handleConnection(socket))
+    this.session.wss.on("connection", (socket: ICustomSocket) => this.handleConnection(socket))
   }
 
   private handleConnection(socket: ICustomSocket) {
@@ -95,10 +95,6 @@ class Match {
 
     socket.sendEvent = (payload: any) => {
       socket.send(JSON.stringify(payload))
-    }
-
-    socket.sendToOthers = (payload: any) => {
-      this.sendToOthers(socket.id, payload)
     }
 
     socket.on("pong", () => (socket.isAlive = true))
@@ -110,18 +106,9 @@ class Match {
 
   private broadcast(payload: IEvent<any>) {
     // @ts-ignore
-    this.wss.clients.forEach(client => {
+    this.session.wss.clients.forEach(client => {
       client.send(JSON.stringify(payload))
     })
-  }
-
-  private sendToOthers(sessionId: string, payload: IEvent<any>) {
-    // @ts-ignore
-    this.wss.clients
-      .filter(client => client.id !== sessionId)
-      .forEach(client => {
-        client.send(JSON.stringify(payload))
-      })
   }
 
   private async waitForBegin() {
