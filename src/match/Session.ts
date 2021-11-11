@@ -109,4 +109,11 @@ export class Session {
       }
     })
   }
+
+  public broadcast(payload: IEvent<any>) {
+    // @ts-ignore
+    this.wss.clients.forEach(client => {
+      client.send(JSON.stringify(payload))
+    })
+  }
 }

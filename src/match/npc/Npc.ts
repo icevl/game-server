@@ -1,6 +1,6 @@
 import { IMapSpawnNPC } from "@interfaces/maps-spawns-npcs.interface"
 import { SpawnedNPC } from "@interfaces/match/npc.interface"
-import { IBroadcast, EventType } from "@interfaces/match/match.interface"
+import { EventType } from "@interfaces/match/match.interface"
 import { Session } from "../Session"
 
 interface NPCConfig {
@@ -16,7 +16,6 @@ interface NPCConfig {
 export class Npc {
   private session: Session
   private spawn: IMapSpawnNPC
-  private broadcast: IBroadcast
 
   private loopInterval: NodeJS.Timer
 
@@ -29,13 +28,12 @@ export class Npc {
 
   private isScream: boolean = false
 
-  constructor(session: Session, spawn: IMapSpawnNPC, broadcast: IBroadcast) {
+  constructor(session: Session, spawn: IMapSpawnNPC) {
     const { npc } = spawn
     const spawnGroup = session.map.npcSpawnPoints[spawn.group_id]
 
     this.session = session
     this.spawn = spawn
-    this.broadcast = broadcast
 
     this.character = npc.model
     this.name = `npc_${npc.name}_${Math.round(Math.random() * 10000)}`
@@ -71,11 +69,12 @@ export class Npc {
 
     if (!this.isScream && this.currentHealth <= this.config.health / 2) {
       this.isScream = true
-      this.broadcast({ type: EventType.NPCScream, data: { character: this.name } })
+      this.session.broadcast({ type: EventType.NPCScream, data: { character: this.name } })
     }
 
     if (this.currentHealth <= 0) {
       this.currentHealth = 0
+      this.session.broadcast({ type: EventType.NPCDie, data: { character: this.name } })
       this.destroy()
     }
   }

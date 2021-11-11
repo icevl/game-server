@@ -99,8 +99,15 @@ class Match {
 
     socket.on("pong", () => (socket.isAlive = true))
     socket.on("message", data => {
-      const payload = JSON.parse(data.toString())
-      new Processor(socket, this.session, this.bot).process(payload)
+      try {
+        const payload = JSON.parse(data.toString())
+
+        console.log("payload", payload)
+
+        new Processor(socket, this.session, this.bot).process(payload)
+      } catch (_) {
+        console.log("payload", data.toString())
+      }
     })
   }
 

@@ -17,6 +17,34 @@ export interface IEventDamage {
   damage_type: number
 }
 
+export interface IEventCharacterSetDestination {
+  character: string
+  waypoint: string
+}
+
+export interface IEventCharacterSetRotation {
+  character: string
+  root: {
+    x: number
+    y: number
+    z: number
+  },
+  body: {
+    x: number
+    y: number
+    z: number
+  }
+}
+
+export interface IEventShoot {
+  character: string
+  dst: {
+    x: number
+    y: number
+    z: number
+  }
+}
+
 export interface IEventHoldSpawnPoint {
   character: string
   point: string
@@ -43,13 +71,18 @@ export enum EventType {
   SpawnPlayer = "spawn_player",
   SpawnNPC = "spawn_npc",
   NPCScream = "npc_scream",
+  NPCDie = "npc_die",
   SetSpawnGroup = "set_group",
   HoldSpawnPoint = "hold_spawn_point",
   Damage = "damage",
   BotAttackStart = "bot_attack_start",
   BotAttackStop = "bot_attack_stop",
   SetMasterPlayer = "set_master_player",
-  MissionText = "mission_text"
+  MissionText = "mission_text",
+  SetCharacterDestination = "set_destination",
+  SetCharacterRotation = "set_rotation",
+  SetCharacterAim = "character_aim",
+  Shoot = "shoot"
 }
 
 export type IBroadcast = (event: IEvent<any>) => void

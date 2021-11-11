@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { IBroadcast, EventType } from "@interfaces/match/match.interface"
+import { EventType } from "@interfaces/match/match.interface"
 import { Session } from "../Session"
 import { IMapSpawnNPC } from "@interfaces/maps-spawns-npcs.interface"
 
@@ -7,7 +7,6 @@ import { Npc } from "./Npc"
 
 export class NpcSpawner {
   public spawn: IMapSpawnNPC
-  private broadcast: IBroadcast
   private session: Session
 
   private mainLoopInterval: NodeJS.Timer
@@ -16,10 +15,9 @@ export class NpcSpawner {
   private isSpawning: boolean
   public isComplete: boolean
 
-  constructor(session: Session, broadcast: IBroadcast, spawn: IMapSpawnNPC) {
+  constructor(session: Session, spawn: IMapSpawnNPC) {
     this.spawn = spawn
     this.session = session
-    this.broadcast = broadcast
     this.isSpawning = false
     this.isComplete = false
     this.start()
@@ -61,10 +59,10 @@ export class NpcSpawner {
   }
 
   private spawnLoop() {
-    const npc = new Npc(this.session, this.spawn, this.broadcast)
+    const npc = new Npc(this.session, this.spawn)
 
     this.session.addNPC(npc)
-    this.broadcast({ type: EventType.SpawnNPC, data: npc.data })
+    this.session.broadcast({ type: EventType.SpawnNPC, data: npc.data })
     console.log(`[SPAWN]: ${npc.config.name} to ${npc.spawnPoint}`)
   }
 }

@@ -27,7 +27,7 @@ export class NpcMachine {
   private async begin() {
     const mapSpawns = await this.npcService.findMapSpawns(this.session.match.map_id)
     mapSpawns.forEach(spawn => {
-      this.spawns[spawn.id] = new NpcSpawner(this.session, this.broadcast, spawn)
+      this.spawns[spawn.id] = new NpcSpawner(this.session, spawn)
     })
 
     this.stageSwitcherInterval = setInterval(() => this.stageSwitcher(), 5000)

@@ -3,6 +3,7 @@ import { MatchAuth } from "./events/MatchAuth"
 import { Pong } from "./events/Pong"
 import { MatchMap } from "./events/MatchMap"
 import { Damage } from "./events/Damage"
+import { CharacterMovements } from "./events/CharacterMovements"
 import { MatchEventBase } from "./events/MatchEventBase"
 
 const EVENT_MAPING = {
@@ -10,7 +11,11 @@ const EVENT_MAPING = {
   [EventType.Pong]: Pong,
   [EventType.SpawnBlocksComplete]: MatchMap,
   [EventType.HoldSpawnPoint]: MatchMap,
-  [EventType.Damage]: Damage
+  [EventType.Damage]: Damage,
+  [EventType.SetCharacterDestination]: CharacterMovements,
+  [EventType.SetCharacterRotation]: CharacterMovements,
+  [EventType.SetCharacterAim]: CharacterMovements,
+  [EventType.Shoot]: CharacterMovements
 }
 
 export class Processor extends MatchEventBase {
