@@ -104,7 +104,7 @@ export class Session {
     const player = this.getCharacterPlayer(characterId)
     // @ts-ignore
     this.wss.clients.forEach(client => {
-      if (client.id !== player.sessionId) {
+      if (client.id !== player.sessionId && !player.character.is_bot) {
         client.send(JSON.stringify(payload))
       }
     })

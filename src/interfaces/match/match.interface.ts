@@ -82,6 +82,8 @@ export enum EventType {
   SetCharacterDestination = "set_destination",
   SetCharacterRotation = "set_rotation",
   SetCharacterAim = "character_aim",
+  EquipWeapon = "equip_weapon",
+  ReloadingStart = "reloading_start",
   Shoot = "shoot"
 }
 
