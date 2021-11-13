@@ -9,6 +9,8 @@ export class CharacterMovements extends MatchEventBase {
       case EventType.SetCharacterAim:
       case EventType.EquipWeapon:
       case EventType.ReloadingStart:
+      case EventType.ShootStart:
+      case EventType.ShootStop:
       case EventType.Shoot:
         return this.broadcast(event)
 

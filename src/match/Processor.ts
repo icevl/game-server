@@ -17,6 +17,8 @@ const EVENT_MAPING = {
   [EventType.SetCharacterAim]: CharacterMovements,
   [EventType.EquipWeapon]: CharacterMovements,
   [EventType.ReloadingStart]: CharacterMovements,
+  [EventType.ShootStart]: CharacterMovements,
+  [EventType.ShootStop]: CharacterMovements,
   [EventType.Shoot]: CharacterMovements
 }
 

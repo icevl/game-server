@@ -101,7 +101,7 @@ class Match {
     socket.on("message", data => {
       try {
         const payload = JSON.parse(data.toString())
-
+        console.log(payload);
         new Processor(socket, this.session, this.bot).process(payload)
       } catch (_) {
         console.log("payload", data.toString())

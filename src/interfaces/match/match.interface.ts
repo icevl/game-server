@@ -15,6 +15,7 @@ export interface IEventDamage {
   character: string
   damage: number
   damage_type: number
+  shooter: string
 }
 
 export interface IEventCharacterSetDestination {
@@ -84,6 +85,8 @@ export enum EventType {
   SetCharacterAim = "character_aim",
   EquipWeapon = "equip_weapon",
   ReloadingStart = "reloading_start",
+  ShootStart = "shoot_start",
+  ShootStop = "shoot_stop",
   Shoot = "shoot"
 }
 
