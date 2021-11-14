@@ -50,7 +50,7 @@
       host: '195.161.41.225',
       ref: 'origin/master',
       repo: 'git@github.com:icevl/game-server.git',
-      path: '/home/ice',
+      path: '/home/ice/game-server',
       'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --only dev',
     },
   },
