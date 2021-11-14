@@ -19,7 +19,8 @@ const EVENT_MAPING = {
   [EventType.ReloadingStart]: CharacterMovements,
   [EventType.ShootStart]: CharacterMovements,
   [EventType.ShootStop]: CharacterMovements,
-  [EventType.Shoot]: CharacterMovements
+  [EventType.Shoot]: CharacterMovements,
+  [EventType.CharacterSit]: CharacterMovements
 }
 
 export class Processor extends MatchEventBase {

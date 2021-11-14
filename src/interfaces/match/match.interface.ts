@@ -86,6 +86,7 @@ export enum EventType {
   EquipWeapon = "equip_weapon",
   ReloadingStart = "reloading_start",
   ShootStart = "shoot_start",
+  CharacterSit = "character_sit",
   ShootStop = "shoot_stop",
   Shoot = "shoot"
 }

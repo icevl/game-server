@@ -41,7 +41,7 @@ export class NpcSpawner {
   private mainLoop() {
     const stageDuration = dayjs().diff(dayjs(this.session.map.stageStartedAt), "seconds")
 
-    if (this.isSpawning && this.spawnedCount === this.totalAmount) {
+    if (this.isSpawning && this.spawnedCount >= this.totalAmount) {
       clearInterval(this.mainLoopInterval)
       clearInterval(this.spawnLoopInterval)
 
