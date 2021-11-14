@@ -27,10 +27,10 @@
     {
       name: 'dev', // pm2 start App name
       script: 'ts-node', // ts-node
-      args: '-r tsconfig-paths/register --transpile-only src/server.ts', // ts-node args
-      exec_mode: 'cluster', // 'cluster' or 'fork'
-      instance_var: 'INSTANCE_ID', // instance variable
-      instances: 2, // pm2 instance count
+      args: '-r tsconfig-paths/register --transpile-only src/match.ts', // ts-node args
+      exec_mode: 'fork', // 'cluster' or 'fork'
+      // instance_var: 'INSTANCE_ID', // instance variable
+      // instances: 2, // pm2 instance count
       autorestart: true, // auto restart if process crash
       watch: false, // files change automatic restart
       ignore_watch: ['node_modules', 'logs'], // ignore files change
@@ -45,13 +45,13 @@
     },
   ],
   deploy: {
-    production: {
-      user: 'user',
-      host: '0.0.0.0',
+    dev: {
+      user: 'ice',
+      host: '195.161.41.225',
       ref: 'origin/master',
       repo: 'git@github.com:repo.git',
-      path: 'dist/server.js',
-      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --only prod',
+      path: 'dist/match.js',
+      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --only dev',
     },
   },
 };
