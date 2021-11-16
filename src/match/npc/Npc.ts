@@ -79,6 +79,11 @@ export class Npc {
     }
   }
 
+  public getEnemy() {
+    const players = this.session.getOnlinePlayers().filter(player => player.currentHealth > 0)
+    return players[Math.floor(Math.random() * players.length)].name
+  }
+
   private call() {
     this.loopInterval = setInterval(() => this.loop(), 1000)
   }
@@ -94,11 +99,6 @@ export class Npc {
         this.attackTarget = this.getEnemy()
       }
     }
-  }
-
-  private getEnemy() {
-    const players = this.session.getOnlinePlayers()
-    return players[Math.floor(Math.random() * players.length)].name
   }
 
   private destroy() {

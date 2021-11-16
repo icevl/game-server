@@ -83,6 +83,7 @@ export enum EventType {
   SpawnNPC = "spawn_npc",
   NPCScream = "npc_scream",
   NPCDie = "npc_die",
+  NPCAgro = "npc_agro",
   NPCAttackDamage = "npc_attack_damage",
   CharacterChangeHealth = "character_change_health",
   SetSpawnGroup = "set_group",
