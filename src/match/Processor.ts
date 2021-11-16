@@ -5,6 +5,7 @@ import { MatchMap } from "./events/MatchMap"
 import { Damage } from "./events/Damage"
 import { CharacterMovements } from "./events/CharacterMovements"
 import { MatchEventBase } from "./events/MatchEventBase"
+import { NPCAttackDamage } from "./events/NPCAttackDamage"
 
 const EVENT_MAPING = {
   [EventType.Connect]: MatchAuth,
@@ -12,6 +13,7 @@ const EVENT_MAPING = {
   [EventType.SpawnBlocksComplete]: MatchMap,
   [EventType.HoldSpawnPoint]: MatchMap,
   [EventType.Damage]: Damage,
+  [EventType.NPCAttackDamage]: NPCAttackDamage,
   [EventType.SetCharacterDestination]: CharacterMovements,
   [EventType.SetCharacterRotation]: CharacterMovements,
   [EventType.SetCharacterAim]: CharacterMovements,

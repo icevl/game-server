@@ -49,6 +49,9 @@ export class MatchMap extends MatchEventBase {
           data: {
             name: `character_${session.character.id}`,
             character: session.character.model,
+            position: characterPlayer.position,
+            max_health: player.maxHealth,
+            current_health: player.currentHealth,
             target: characterPlayer.spawn,
             is_main: player.character.id === session.character_id,
             is_bot: session.character.is_bot,

@@ -4,3 +4,9 @@ export interface ICharacter {
   model: string
   is_bot: boolean
 }
+
+export interface IVector3 {
+  x: number
+  y: number
+  z: number
+}

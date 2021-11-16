@@ -21,6 +21,11 @@ export class CharacterMovements extends MatchEventBase {
 
   private broadcast(event: IEvent<any>) {
     const player = this.session.getPlayerByName(event.data.character)
+
+    if (event.data.position) {
+      player.position = event.data.position
+    }
+
     this.session.sendToOthers(player.character.id, event)
   }
 }

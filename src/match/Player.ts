@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { ICharacter } from "@interfaces/characters.interface"
+import { ICharacter, IVector3 } from "@interfaces/characters.interface"
 import { IUser } from "@interfaces/users.interface"
 import { EventType } from "@interfaces/match/match.interface"
 import UserService from "@services/users.service"
@@ -28,6 +28,11 @@ export class Player {
   public isMaster: boolean
   public sessionId: string
   public lastActiveAt: Date
+  public position: IVector3
+
+  public maxHealth: number
+  public currentHealth: number
+
   public attackTo?: string
   public socket?: ICustomSocket
 
@@ -55,6 +60,14 @@ export class Player {
     this.sessionId = socket ? socket.id : null
     this.socket = socket
     this.lastActiveAt = dayjs().toDate()
+    this.maxHealth = 300
+    this.currentHealth = 300
+
+    this.position = {
+      x: 0,
+      y: 0,
+      z: 0
+    }
 
     if (!this.character.is_bot) this.startPing()
 
@@ -68,6 +81,14 @@ export class Player {
 
   public get isOnline() {
     return this.lastActiveAgo <= 7
+  }
+
+  public getDamage(damage: number) {
+    this.currentHealth -= damage
+
+    if (this.currentHealth <= 0) {
+      this.currentHealth = 0
+    }
   }
 
   public destroy() {

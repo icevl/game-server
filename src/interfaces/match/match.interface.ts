@@ -18,6 +18,16 @@ export interface IEventDamage {
   shooter: string
 }
 
+export interface IEventChangeHealth {
+  character: string
+  health: number
+}
+
+export interface IEventNPCAttackDamage {
+  character: string
+  target: string
+}
+
 export interface IEventCharacterSetDestination {
   character: string
   waypoint: string
@@ -29,7 +39,7 @@ export interface IEventCharacterSetRotation {
     x: number
     y: number
     z: number
-  },
+  }
   body: {
     x: number
     y: number
@@ -73,6 +83,8 @@ export enum EventType {
   SpawnNPC = "spawn_npc",
   NPCScream = "npc_scream",
   NPCDie = "npc_die",
+  NPCAttackDamage = "npc_attack_damage",
+  CharacterChangeHealth = "character_change_health",
   SetSpawnGroup = "set_group",
   HoldSpawnPoint = "hold_spawn_point",
   Damage = "damage",
