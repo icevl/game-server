@@ -14,6 +14,7 @@ import { Processor } from "./match/Processor"
 import { Session } from "./match/Session"
 import { Bot } from "./match/Bot"
 import { NpcMachine } from "./match/npc/NpcMachine"
+import { GameWatcher } from "./match/GameWatcher"
 
 export interface ICustomSocket extends WebSocket {
   isAlive: boolean
@@ -79,6 +80,8 @@ class Match {
 
       this.startServer()
       this.waitForBegin()
+
+      new GameWatcher(this.session)
     }
   }
 
@@ -127,7 +130,7 @@ class Match {
       this.session.map.stage = 1
       this.session.map.stageStartedAt = dayjs().toDate()
 
-      this.broadcast({ type: EventType.MissionText, data: { text: "Тут будет текст миссии" } })
+      // this.broadcast({ type: EventType.MissionText, data: { text: "Тут будет текст миссии" } })
     }
   }
 }

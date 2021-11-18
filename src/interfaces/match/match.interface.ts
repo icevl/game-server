@@ -101,6 +101,7 @@ export enum EventType {
   ShootStart = "shoot_start",
   CharacterSit = "character_sit",
   ShootStop = "shoot_stop",
+  CharacterMatchScore = "character_match_score",
   Shoot = "shoot"
 }
 

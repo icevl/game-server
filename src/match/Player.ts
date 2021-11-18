@@ -34,6 +34,8 @@ export class Player {
   public maxHealth: number
   public currentHealth: number
 
+  public score: number
+
   public attackTo?: string
   public socket?: ICustomSocket
 
@@ -54,7 +56,7 @@ export class Player {
     this.user = user
     this.character = character
     this.name = `character_${character.id}`
-    this.nick = character.name;
+    this.nick = character.name
     this.spawn = spawnPoint
     this.group = null
     this.isReady = false
@@ -62,6 +64,7 @@ export class Player {
     this.sessionId = socket ? socket.id : null
     this.socket = socket
     this.lastActiveAt = dayjs().toDate()
+    this.score = 0
     this.maxHealth = 1000
     this.currentHealth = 1000
 
@@ -83,6 +86,10 @@ export class Player {
 
   public get isOnline() {
     return this.lastActiveAgo <= 7
+  }
+
+  public addScore(points: number) {
+    this.score += points
   }
 
   public takeDamage(damage: number) {
