@@ -37,7 +37,7 @@ export class MatchMap extends MatchEventBase {
   }
 
   private async spawnPlayers() {
-    const player = this.session.getSocketPlayer(this.socket.id)
+    const me = this.session.getSocketPlayer(this.socket.id)
     const sessions = await this.matchesService.findMatchSessions(this.session.match.id)
 
     sessions.forEach(session => {
@@ -48,12 +48,13 @@ export class MatchMap extends MatchEventBase {
           type: EventType.SpawnPlayer,
           data: {
             name: `character_${session.character.id}`,
+            nick: characterPlayer.nick,
             character: session.character.model,
             position: characterPlayer.position,
-            max_health: player.maxHealth,
-            current_health: player.currentHealth,
+            max_health: characterPlayer.maxHealth,
+            current_health: characterPlayer.currentHealth,
             target: characterPlayer.spawn,
-            is_main: player.character.id === session.character_id,
+            is_main: me.character.id === session.character_id,
             is_bot: session.character.is_bot,
             weapons: [ak47, electro]
           }
@@ -62,15 +63,15 @@ export class MatchMap extends MatchEventBase {
         this.socket.sendEvent(playerPayloadEvent)
 
         // Send event to other players
-        if (player.character.id === session.character_id) {
+        if (me.character.id === session.character_id) {
           playerPayloadEvent.data.is_main = false
-          this.session.sendToOthers(player.character.id, playerPayloadEvent)
+          this.session.sendToOthers(me.character.id, playerPayloadEvent)
         }
       }
     })
 
-    this.session.setPlayerReady(player.character.id, true)
-    this.socket.sendEvent({ type: EventType.SetSpawnGroup, data: { character: player.name, name: player.group } })
+    this.session.setPlayerReady(me.character.id, true)
+    this.socket.sendEvent({ type: EventType.SetSpawnGroup, data: { character: me.name, name: me.group } })
   }
 
   private holdSpawnPoint(event: IEvent<IEventHoldSpawnPoint>) {

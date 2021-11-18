@@ -22,6 +22,7 @@ export class Player {
   public character: ICharacter
   public user: IUser
   public name: string
+  public nick: string
   public spawn: string
   public group: string | null
   public isReady: boolean
@@ -53,6 +54,7 @@ export class Player {
     this.user = user
     this.character = character
     this.name = `character_${character.id}`
+    this.nick = character.name;
     this.spawn = spawnPoint
     this.group = null
     this.isReady = false
@@ -60,8 +62,8 @@ export class Player {
     this.sessionId = socket ? socket.id : null
     this.socket = socket
     this.lastActiveAt = dayjs().toDate()
-    this.maxHealth = 300
-    this.currentHealth = 300
+    this.maxHealth = 1000
+    this.currentHealth = 1000
 
     this.position = {
       x: 0,
@@ -83,7 +85,7 @@ export class Player {
     return this.lastActiveAgo <= 7
   }
 
-  public getDamage(damage: number) {
+  public takeDamage(damage: number) {
     this.currentHealth -= damage
 
     if (this.currentHealth <= 0) {

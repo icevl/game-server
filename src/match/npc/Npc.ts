@@ -64,7 +64,7 @@ export class Npc {
     }
   }
 
-  public getDamage(damage: number) {
+  public takeDamage(damage: number) {
     this.currentHealth -= damage
 
     if (!this.isScream && this.currentHealth <= this.config.health / 2) {
@@ -80,8 +80,12 @@ export class Npc {
   }
 
   public getEnemy() {
-    const players = this.session.getOnlinePlayers().filter(player => player.currentHealth > 0)
-    return players[Math.floor(Math.random() * players.length)].name
+    try {
+      const players = this.session.getOnlinePlayers().filter(player => player.currentHealth > 0)
+      return players[Math.floor(Math.random() * players.length)].name
+    } catch {
+      return null;
+    }
   }
 
   private call() {

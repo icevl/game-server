@@ -8,7 +8,7 @@ export class NPCAttackDamage extends MatchEventBase {
     const target = this.session.getPlayerByName(event.data.target)
     if (!npc || !target) return
 
-    target.getDamage(20)
+    target.takeDamage(10)
 
     this.session.broadcast({
       type: EventType.CharacterChangeHealth,

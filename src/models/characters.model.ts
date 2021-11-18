@@ -7,6 +7,7 @@ export type MatchCreationAttributes = Optional<ICharacter, "id" | "user_id" | "m
 export class CharacterModel extends Model<ICharacter, MatchCreationAttributes> implements ICharacter {
   public id: number
   public user_id: number
+  public name: string
   public model: string
   public is_bot: boolean
 
@@ -29,6 +30,10 @@ export default function (sequelize: Sequelize): typeof CharacterModel {
       user_id: {
         allowNull: false,
         type: DataTypes.INTEGER
+      },
+      name: {
+        allowNull: true,
+        type: DataTypes.STRING
       },
       model: {
         allowNull: false,

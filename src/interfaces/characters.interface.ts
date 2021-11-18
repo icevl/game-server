@@ -1,5 +1,6 @@
 export interface ICharacter {
   id: number
+  name: string
   user_id: number
   model: string
   is_bot: boolean

@@ -6,7 +6,7 @@ export class Damage extends MatchEventBase {
     const npc = this.session.getNPCByName(event.data.character)
 
     if (npc) {
-      npc.getDamage(event.data.damage)
+      npc.takeDamage(event.data.damage)
 
       if (npc.currentHealth == 0) {
         this.bot.enemyDead(event.data.character)
