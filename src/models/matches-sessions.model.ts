@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Model, Optional } from "sequelize"
-import { IMatchSession } from "@interfaces/matches-sessions.interface"
+import { IMatchSession, ISide } from "@interfaces/matches-sessions.interface"
 
 export type MatchCreationAttributes = Optional<IMatchSession, "id" | "match_id" | "character_id">
 
@@ -7,7 +7,7 @@ export class MatchesSessionsModel extends Model<IMatchSession, MatchCreationAttr
   public id: number
   public match_id: number
   public character_id: number
-  public side: string
+  public side: ISide
   public is_master: boolean
 
   public readonly createdAt!: Date

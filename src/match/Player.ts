@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import { ICharacter, IVector3 } from "@interfaces/characters.interface"
 import { IUser } from "@interfaces/users.interface"
+import { ISide } from "@/interfaces/matches-sessions.interface"
 import { EventType } from "@interfaces/match/match.interface"
 import UserService from "@services/users.service"
 import CharacterService from "@services/characters.service"
@@ -23,6 +24,7 @@ export class Player {
   public user: IUser
   public name: string
   public nick: string
+  public side: ISide
   public spawn: string
   public group: string | null
   public isReady: boolean
@@ -64,9 +66,10 @@ export class Player {
     this.sessionId = socket ? socket.id : null
     this.socket = socket
     this.lastActiveAt = dayjs().toDate()
+    this.side = characterSession.side
     this.score = 0
     this.maxHealth = 1000
-    this.currentHealth = 1000
+    this.currentHealth = 100
 
     this.position = {
       x: 0,
@@ -92,12 +95,14 @@ export class Player {
     this.score += points
   }
 
+  public takeHeal(amount: number) {
+    this.currentHealth += amount
+    if (this.currentHealth >= this.maxHealth) this.currentHealth = this.maxHealth
+  }
+
   public takeDamage(damage: number) {
     this.currentHealth -= damage
-
-    if (this.currentHealth <= 0) {
-      this.currentHealth = 0
-    }
+    if (this.currentHealth <= 0) this.currentHealth = 0
   }
 
   public destroy() {

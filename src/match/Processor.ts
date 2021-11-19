@@ -6,6 +6,7 @@ import { Damage } from "./events/Damage"
 import { CharacterMovements } from "./events/CharacterMovements"
 import { MatchEventBase } from "./events/MatchEventBase"
 import { NPCAttackDamage } from "./events/NPCAttackDamage"
+import { Heal } from "./events/Heal"
 
 const EVENT_MAPING = {
   [EventType.Connect]: MatchAuth,
@@ -22,7 +23,8 @@ const EVENT_MAPING = {
   [EventType.ShootStart]: CharacterMovements,
   [EventType.ShootStop]: CharacterMovements,
   [EventType.Shoot]: CharacterMovements,
-  [EventType.CharacterSit]: CharacterMovements
+  [EventType.CharacterSit]: CharacterMovements,
+  [EventType.CharacterHealRequest]: Heal
 }
 
 export class Processor extends MatchEventBase {
