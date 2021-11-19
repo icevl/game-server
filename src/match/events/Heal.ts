@@ -2,6 +2,8 @@ import { IEvent, IEventDamage, EventType } from "@interfaces/match/match.interfa
 import { MatchEventBase } from "./MatchEventBase"
 import { Player } from "../Player"
 
+const HEAL_PERCENT = 20
+
 export class Heal extends MatchEventBase {
   public async call(event: IEvent<IEventDamage>) {
     const character = this.session.getPlayerByName(event.data.character)
@@ -12,7 +14,8 @@ export class Heal extends MatchEventBase {
     console.log("Heal reqest from character ", character.nick)
 
     this.session.players.forEach(player => {
-      player.takeHeal(40)
+      const healAmount = (player.maxHealth * HEAL_PERCENT) / 100
+      player.takeHeal(healAmount)
 
       this.session.broadcast({
         type: EventType.CharacterChangeHealth,
