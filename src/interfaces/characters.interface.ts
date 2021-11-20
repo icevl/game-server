@@ -3,6 +3,7 @@ export interface ICharacter {
   name: string
   user_id: number
   model: string
+  heal_count: number
   is_bot: boolean
 }
 

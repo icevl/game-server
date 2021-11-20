@@ -10,6 +10,7 @@ export class CharacterModel extends Model<ICharacter, MatchCreationAttributes> i
   public name: string
   public model: string
   public is_bot: boolean
+  public heal_count: number
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -43,7 +44,12 @@ export default function (sequelize: Sequelize): typeof CharacterModel {
         allowNull: false,
         defaultValue: 0,
         type: DataTypes.INTEGER
-      }
+      },
+      heal_count: {
+        allowNull: true,
+        defaultValue: 10,
+        type: DataTypes.INTEGER
+      },
     },
     {
       tableName: "characters",

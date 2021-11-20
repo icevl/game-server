@@ -36,6 +36,8 @@ export class Player {
   public maxHealth: number
   public currentHealth: number
 
+  public healCount: number
+
   public score: number
 
   public attackTo?: string
@@ -70,6 +72,7 @@ export class Player {
     this.score = 0
     this.maxHealth = 1000
     this.currentHealth = 100
+    this.healCount = character.heal_count
 
     this.position = {
       x: 0,
