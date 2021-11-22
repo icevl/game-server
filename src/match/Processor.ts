@@ -4,6 +4,7 @@ import { Pong } from "./events/Pong"
 import { MatchMap } from "./events/MatchMap"
 import { Damage } from "./events/Damage"
 import { CharacterMovements } from "./events/CharacterMovements"
+import { NPCMovements } from "./events/NPCMovements"
 import { MatchEventBase } from "./events/MatchEventBase"
 import { NPCAttackDamage } from "./events/NPCAttackDamage"
 import { Heal } from "./events/Heal"
@@ -24,7 +25,8 @@ const EVENT_MAPING = {
   [EventType.ShootStop]: CharacterMovements,
   [EventType.Shoot]: CharacterMovements,
   [EventType.CharacterSit]: CharacterMovements,
-  [EventType.CharacterHealRequest]: Heal
+  [EventType.CharacterHealRequest]: Heal,
+  [EventType.NPCTargetReached]: NPCMovements
 }
 
 export class Processor extends MatchEventBase {

@@ -77,6 +77,7 @@ export class MatchMap extends MatchEventBase {
 
   private holdSpawnPoint(event: IEvent<IEventHoldSpawnPoint>) {
     const player = this.session.getPlayerByName(event.data.character)
+    player.position = event.data.position
     this.session.setPlayerSpawn(player.character.id, event.data.point)
   }
 }

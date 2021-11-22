@@ -1,4 +1,4 @@
-import { IEvent } from "@/interfaces/match/match.interface"
+import { IEvent } from "@interfaces/match/match.interface"
 import { ICustomSocket } from "../../match"
 import { Session } from "../Session"
 import { Bot } from "../../match/Bot"

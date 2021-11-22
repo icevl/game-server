@@ -1,4 +1,4 @@
-import { ICharacter } from "../characters.interface"
+import { ICharacter, IVector3 } from "../characters.interface"
 import { IUser } from "@interfaces/users.interface"
 
 export interface IEvent<T> {
@@ -35,30 +35,19 @@ export interface IEventCharacterSetDestination {
 
 export interface IEventCharacterSetRotation {
   character: string
-  root: {
-    x: number
-    y: number
-    z: number
-  }
-  body: {
-    x: number
-    y: number
-    z: number
-  }
+  root: IVector3
+  body: IVector3
 }
 
 export interface IEventShoot {
   character: string
-  dst: {
-    x: number
-    y: number
-    z: number
-  }
+  dst: IVector3
 }
 
 export interface IEventHoldSpawnPoint {
   character: string
   point: string
+  position: IVector3
 }
 
 export interface IPlayer {
@@ -85,6 +74,9 @@ export enum EventType {
   NPCDie = "npc_die",
   NPCAgro = "npc_agro",
   NPCAttackDamage = "npc_attack_damage",
+  NPCTargetReached = "npc_target_reached",
+  NPCTargetFollow = "npc_target_follow",
+  NPCAttack = "npc_attack",
   CharacterChangeHealth = "character_change_health",
   CharacterHealRequest = "character_heal_request",
   SetSpawnGroup = "set_group",

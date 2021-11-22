@@ -41,7 +41,7 @@ class Match {
   }
 
   private async init() {
-    await DB.sequelize.sync({ force: false, alter: true })
+    await DB.sequelize.sync({ force: false, alter: false })
     const match = await this.matchesService.findMatch(this.uuid)
     if (match && match.id) {
       const blocks = await this.map.getSpawnBlocks(match.map_id)
@@ -127,7 +127,7 @@ class Match {
     } else {
       console.log("Starting match...")
 
-      this.session.map.stage = 1
+      this.session.map.stage = 3
       this.session.map.stageStartedAt = dayjs().toDate()
 
       // this.broadcast({ type: EventType.MissionText, data: { text: "Тут будет текст миссии" } })

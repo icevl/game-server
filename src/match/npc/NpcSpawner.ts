@@ -60,8 +60,16 @@ export class NpcSpawner {
     if (!this.isSpawning) {
       const spawnInterval = this.interval * 1000
       this.isSpawning = true
-      this.spawnLoopInterval = setInterval(() => this.spawnLoop(), spawnInterval)
-      console.log(`Start spawn [${this.spawn.npc.name}] 1 per. ${this.interval}sec.`)
+
+      if (this.spawn.duration > 1) {
+        this.spawnLoopInterval = setInterval(() => this.spawnLoop(), spawnInterval)
+        console.log(`Start spawn [${this.spawn.npc.name}] 1 per. ${this.interval}sec.`)
+      } else {
+        Array(this.spawn.amount)
+          .fill(Number)
+          .forEach(() => this.spawnLoop())
+        console.log(`Spawn ${this.spawn.amount} [${this.spawn.npc.name}]`)
+      }
     }
   }
 

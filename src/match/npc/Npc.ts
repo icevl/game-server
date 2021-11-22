@@ -3,6 +3,12 @@ import { SpawnedNPC } from "@interfaces/match/npc.interface"
 import { EventType } from "@interfaces/match/match.interface"
 import { Session } from "../Session"
 
+export enum State {
+  Idle,
+  Moving,
+  Attack
+}
+
 interface NPCConfig {
   name: string
   health: number
@@ -11,6 +17,7 @@ interface NPCConfig {
   attack_distance: number
   attack: number
   defence: number
+  is_boss: boolean
 }
 
 export class Npc {
@@ -27,6 +34,10 @@ export class Npc {
   public config: Partial<NPCConfig> = {}
 
   private isScream: boolean = false
+
+  // Boss
+  public isTargetReached: boolean
+  public state: State
 
   constructor(session: Session, spawn: IMapSpawnNPC) {
     const { npc } = spawn
@@ -47,8 +58,12 @@ export class Npc {
       attack_speed: npc.attack_speed,
       attack_distance: npc.attack_distance,
       attack: npc.attack,
-      defence: npc.defence
+      defence: npc.defence,
+      is_boss: npc.is_boss
     }
+
+    this.isTargetReached = false
+    this.state = State.Idle
 
     this.call()
   }
@@ -84,12 +99,39 @@ export class Npc {
       const players = this.session.getOnlinePlayers().filter(player => player.currentHealth > 0)
       return players[Math.floor(Math.random() * players.length)].name
     } catch {
-      return null;
+      return null
     }
+  }
+
+  // Boss
+  public startMoving(toPlayer?: boolean) {
+    this.state = State.Moving
+
+    if (toPlayer) {
+      this.attackTarget = this.getEnemy()
+      this.session.broadcast({
+        type: EventType.NPCTargetFollow,
+        data: { character: this.name, target: this.attackTarget }
+      })
+    }
+  }
+
+  public attack() {
+    this.state = State.Attack
+    this.session.broadcast({
+      type: EventType.NPCAttack,
+      data: { character: this.name, target: this.getEnemy() }
+    })
+  }
+
+  public targetReached() {
+    this.state = State.Idle
   }
 
   private call() {
     this.loopInterval = setInterval(() => this.loop(), 1000)
+
+    if (this.config.is_boss) setInterval(() => this.attack(), 7000)
   }
 
   private loop() {

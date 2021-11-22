@@ -1,5 +1,6 @@
 import { Session } from "./Session"
-import { EventType } from "@/interfaces/match/match.interface"
+import { EventType } from "@interfaces/match/match.interface"
+import { State } from "./npc/Npc"
 
 export class GameWatcher {
   private session: Session
@@ -22,9 +23,19 @@ export class GameWatcher {
     })
   }
 
+  private bossHandler() {
+    const boss = this.session.npcs.filter(npc => npc.config.is_boss && npc.currentHealth > 0).pop()
+    if (!boss) return
+
+    if (boss.state === State.Idle) {
+      boss.startMoving(true)
+    }
+  }
+
   private init() {
     if (this.session.map.type === "coop") {
       this.statsInterval = setInterval(() => this.syncStats(), 10000)
+      this.statsInterval = setInterval(() => this.bossHandler(), 2000)
     }
   }
 }
