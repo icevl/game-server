@@ -27,6 +27,12 @@ export class GameWatcher {
     const boss = this.session.npcs.filter(npc => npc.config.is_boss && npc.currentHealth > 0).pop()
     if (!boss) return
 
+    const isScream = Math.round(Math.random() * (10 - 1) + 1)
+
+    if (isScream === 5) {
+      boss.scream()
+    }
+
     if (boss.state === State.Idle) {
       boss.startMoving(true)
     }

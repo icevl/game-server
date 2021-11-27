@@ -84,7 +84,7 @@ export class Npc {
 
     if (!this.isScream && this.currentHealth <= this.config.health / 2) {
       this.isScream = true
-      this.session.broadcast({ type: EventType.NPCScream, data: { character: this.name } })
+      this.scream()
     }
 
     if (this.currentHealth <= 0) {
@@ -101,6 +101,10 @@ export class Npc {
     } catch {
       return null
     }
+  }
+
+  public scream() {
+    this.session.broadcast({ type: EventType.NPCScream, data: { character: this.name } })
   }
 
   // Boss
