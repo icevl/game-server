@@ -37,6 +37,7 @@ export class Player {
   public currentHealth: number
 
   public healCount: number
+  public droneCount: number
 
   public score: number
 
@@ -70,9 +71,10 @@ export class Player {
     this.lastActiveAt = dayjs().toDate()
     this.side = characterSession.side
     this.score = 0
-    this.maxHealth = 1000;
+    this.maxHealth = 1000
     this.currentHealth = this.maxHealth
     this.healCount = character.heal_count
+    this.droneCount = 1000
 
     this.position = {
       x: 0,

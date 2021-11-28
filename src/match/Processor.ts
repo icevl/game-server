@@ -8,6 +8,7 @@ import { NPCMovements } from "./events/NPCMovements"
 import { MatchEventBase } from "./events/MatchEventBase"
 import { NPCAttackDamage } from "./events/NPCAttackDamage"
 import { Heal } from "./events/Heal"
+import { DroneEvent } from "./events/Drone"
 
 const EVENT_MAPING = {
   [EventType.Connect]: MatchAuth,
@@ -26,6 +27,7 @@ const EVENT_MAPING = {
   [EventType.Shoot]: CharacterMovements,
   [EventType.CharacterSit]: CharacterMovements,
   [EventType.CharacterHealRequest]: Heal,
+  [EventType.CharacterDroneRequest]: DroneEvent,
   [EventType.NPCTargetReached]: NPCMovements
 }
 

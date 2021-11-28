@@ -81,6 +81,7 @@ export enum EventType {
   DroneAttack = "drone_attack",
   CharacterChangeHealth = "character_change_health",
   CharacterHealRequest = "character_heal_request",
+  CharacterDroneRequest = "character_drone_request",
   SetSpawnGroup = "set_group",
   HoldSpawnPoint = "hold_spawn_point",
   Damage = "damage",

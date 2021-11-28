@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import { IVector3 } from "@interfaces/characters.interface"
 import { EventType } from "@interfaces/match/match.interface"
 import { Session } from "./Session"
@@ -26,7 +27,7 @@ export class Drone {
 
   public create(character: Player) {
     this.character = character
-    this.name = `drone_${character.character.id}`
+    this.name = `drone_${character.character.id}_${dayjs().unix()}`
     this.rate = 400
     this.attack = 50
     this.duration = 200
