@@ -1,11 +1,12 @@
 import { EventEmitter } from "ws"
 import MatchesService from "@services/matches.service"
 import { Npc } from "./npc/Npc"
+import { Player } from "./Player"
+import { Drone } from "./Drone"
 import { IEvent } from "@interfaces/match/match.interface"
 import { ICustomSocket } from "../match"
 import { IMatch } from "@interfaces/matches.interface"
 import { IMap } from "@interfaces/match/map.interface"
-import { Player } from "./Player"
 
 export class Session {
   private matchesService = new MatchesService()
@@ -14,6 +15,7 @@ export class Session {
 
   public players: Array<Player> = []
   public npcs: Array<Npc> = []
+  public drones: Array<Drone> = []
 
   public match: IMatch
   public map: IMap = {
@@ -68,6 +70,14 @@ export class Session {
 
   public addNPC(npc: Npc) {
     this.npcs.push(npc)
+  }
+
+  public addDrone(drone: Drone) {
+    this.drones.push(drone)
+  }
+
+  public removeDrone(drone: Drone) {
+    this.drones = this.drones.filter(d => d.name !== drone.name)
   }
 
   public async getMasterCharacter(): Promise<string> {

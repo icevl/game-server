@@ -2,6 +2,8 @@ import { EventType, IEvent, IEventHoldSpawnPoint } from "@/interfaces/match/matc
 import MatchesService from "@services/matches.service"
 import { MatchEventBase } from "./MatchEventBase"
 
+import { Drone } from "../Drone"
+
 const ak47 = {
   name: "AK47",
   magazine: 60,
@@ -70,6 +72,12 @@ export class MatchMap extends MatchEventBase {
         }
       }
     })
+
+    // SPAWN DRONE
+    setTimeout(() => {
+      const drone = new Drone(this.session).create(me)
+      this.session.addDrone(drone)
+    }, 5000)
 
     this.session.setPlayerReady(me.character.id, true)
     this.socket.sendEvent({ type: EventType.SetSpawnGroup, data: { character: me.name, name: me.group } })

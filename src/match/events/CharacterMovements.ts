@@ -5,6 +5,7 @@ export class CharacterMovements extends MatchEventBase {
   public async call(event: IEvent<any>) {
     switch (event.type) {
       case EventType.SetCharacterDestination:
+      case EventType.SetCharacterPosition:
       case EventType.SetCharacterRotation:
       case EventType.SetCharacterAim:
       case EventType.EquipWeapon:
