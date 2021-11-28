@@ -26,10 +26,13 @@ export class MatchMap extends MatchEventBase {
   public async call(event: IEvent<any>) {
     switch (event.type) {
       case EventType.SpawnBlocksComplete:
-        return this.spawnPlayers()
+        await this.spawnPlayers()
+        this.spawnDrones()
+        break
 
       case EventType.HoldSpawnPoint:
-        return this.holdSpawnPoint(event as IEvent<IEventHoldSpawnPoint>)
+        this.holdSpawnPoint(event as IEvent<IEventHoldSpawnPoint>)
+        break
 
       default:
         return
@@ -74,6 +77,12 @@ export class MatchMap extends MatchEventBase {
 
     this.session.setPlayerReady(me.character.id, true)
     this.socket.sendEvent({ type: EventType.SetSpawnGroup, data: { character: me.name, name: me.group } })
+  }
+
+  private spawnDrones() {
+    this.session.drones.forEach(drone => {
+      this.socket.sendEvent(drone.spawnData)
+    })
   }
 
   private holdSpawnPoint(event: IEvent<IEventHoldSpawnPoint>) {

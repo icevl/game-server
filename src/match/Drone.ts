@@ -15,6 +15,7 @@ export class Drone {
   public rate: number
   public attack: number
   public duration: number
+  public spawnedAt: number
 
   public attackTo?: string
 
@@ -28,16 +29,12 @@ export class Drone {
   public create(character: Player) {
     this.character = character
     this.name = `drone_${character.character.id}_${dayjs().unix()}`
+    this.spawnedAt = dayjs().unix()
+    this.position = character.position
     this.rate = 400
     this.attack = 50
-    this.duration = 200
+    this.duration = 300
     this.attackTo = this.getRandomEnemy()
-
-    this.position = {
-      x: 0,
-      y: 0,
-      z: 0
-    }
 
     this.loopInterval = setInterval(() => this.loop(), 1000)
     setTimeout(() => this.destroy(), this.duration * 1000)
@@ -46,24 +43,28 @@ export class Drone {
     return this
   }
 
+  public get spawnData() {
+    return {
+      type: EventType.DroneSpawn,
+      data: {
+        name: this.name,
+        character: this.character.name,
+        position: this.position,
+        attack: this.attack,
+        rate: this.rate,
+        duration: this.spawnedAt + this.duration - dayjs().unix(),
+        target: this.attackTo
+      }
+    }
+  }
+
   private destroy() {
     clearInterval(this.loopInterval)
     this.session.removeDrone(this)
   }
 
   private broadcastEvent() {
-    this.session.broadcast({
-      type: EventType.DroneSpawn,
-      data: {
-        name: this.name,
-        character: this.character.name,
-        position: this.character.position,
-        attack: this.attack,
-        rate: this.rate,
-        duration: this.duration,
-        target: this.attackTo
-      }
-    })
+    this.session.broadcast(this.spawnData)
   }
 
   private loop() {

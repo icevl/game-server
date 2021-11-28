@@ -78,6 +78,7 @@ export enum EventType {
   NPCTargetFollow = "npc_target_follow",
   NPCAttack = "npc_attack",
   DroneSpawn = "drone_spawn",
+  DroneSpawnSuccess = "drone_spawn_success",
   DroneAttack = "drone_attack",
   CharacterChangeHealth = "character_change_health",
   CharacterHealRequest = "character_heal_request",

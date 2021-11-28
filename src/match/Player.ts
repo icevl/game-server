@@ -74,7 +74,7 @@ export class Player {
     this.maxHealth = 1000
     this.currentHealth = this.maxHealth
     this.healCount = character.heal_count
-    this.droneCount = 1000
+    this.droneCount = 2
 
     this.position = {
       x: 0,
