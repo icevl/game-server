@@ -7,7 +7,8 @@ export class Damage extends MatchEventBase {
     const shooter = this.session.getPlayerByName(event.data.shooter)
 
     if (npc && shooter) {
-      const damage = event.data.damage
+      let damage = event.data.damage
+      if (npc.currentHealth - damage < 0) damage = npc.currentHealth
 
       npc.takeDamage(damage)
       shooter.addScore(damage)
@@ -17,9 +18,9 @@ export class Damage extends MatchEventBase {
       }
     }
 
-    // this.socket.sendToOthers({
-    //   type: EventType.Damage,
-    //   data: { character: event.data.character, damage: event.data.damage, damage_type: event.data.damage_type }
-    // })
+    this.session.broadcast({
+      type: EventType.Damage,
+      data: { character: event.data.character, damage: event.data.damage, damage_type: event.data.damage_type }
+    })
   }
 }

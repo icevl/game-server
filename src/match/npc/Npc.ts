@@ -18,6 +18,7 @@ interface NPCConfig {
   attack: number
   defence: number
   is_boss: boolean
+  level: number
 }
 
 export class Npc {
@@ -59,7 +60,8 @@ export class Npc {
       attack_distance: npc.attack_distance,
       attack: npc.attack,
       defence: npc.defence,
-      is_boss: npc.is_boss
+      is_boss: npc.is_boss,
+      level: npc.attack
     }
 
     this.isTargetReached = false
@@ -135,7 +137,7 @@ export class Npc {
   private call() {
     this.loopInterval = setInterval(() => this.loop(), 1000)
 
-    if (this.config.is_boss) setInterval(() => this.attack(), 7000)
+    if (this.config.is_boss) setInterval(() => this.attack(), this.config.attack_speed * 1000)
   }
 
   private loop() {

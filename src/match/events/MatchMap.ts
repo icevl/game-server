@@ -21,11 +21,10 @@ const svd = {
   is_sniper: true
 }
 
-
 const electro = {
   name: "Electro",
   magazine: 160,
-  accuracy: 100, //60,
+  accuracy: 60, //60,
   reload_time: 1,
   rate: 300,
   damage: 300
@@ -70,7 +69,7 @@ export class MatchMap extends MatchEventBase {
             target: characterPlayer.spawn,
             is_main: me.character.id === session.character_id,
             is_bot: session.character.is_bot,
-            weapons: [svd, electro],
+            weapons: [electro, svd],
             heal_count: characterPlayer.healCount,
             drone_count: characterPlayer.droneCount
           }
