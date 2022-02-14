@@ -13,6 +13,7 @@ export class NPCsModel extends Model<INPC, NpcCreationAttributes> implements INP
   public attack_distance: number
   public attack: number
   public defence: number
+  public fly_height: number
   public is_boss: boolean
 
   public readonly createdAt!: Date
@@ -64,6 +65,11 @@ export default function (sequelize: Sequelize): typeof NPCsModel {
         type: DataTypes.INTEGER
       },
       defence: {
+        allowNull: false,
+        defaultValue: 0,
+        type: DataTypes.INTEGER
+      },
+      fly_height: {
         allowNull: false,
         defaultValue: 0,
         type: DataTypes.INTEGER

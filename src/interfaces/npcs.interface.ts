@@ -8,5 +8,6 @@ export interface INPC {
   attack_distance: number
   attack: number
   defence: number
+  fly_height: number
   is_boss: boolean
 }

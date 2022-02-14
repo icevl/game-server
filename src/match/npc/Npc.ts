@@ -18,6 +18,7 @@ interface NPCConfig {
   attack: number
   defence: number
   is_boss: boolean
+  fly_height: number
   level: number
 }
 
@@ -61,6 +62,7 @@ export class Npc {
       attack: npc.attack,
       defence: npc.defence,
       is_boss: npc.is_boss,
+      fly_height: npc.fly_height,
       level: npc.attack
     }
 

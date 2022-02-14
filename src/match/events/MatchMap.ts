@@ -69,7 +69,7 @@ export class MatchMap extends MatchEventBase {
             target: characterPlayer.spawn,
             is_main: me.character.id === session.character_id,
             is_bot: session.character.is_bot,
-            weapons: [electro, svd],
+            weapons: [ak47, svd],
             heal_count: characterPlayer.healCount,
             drone_count: characterPlayer.droneCount
           }
